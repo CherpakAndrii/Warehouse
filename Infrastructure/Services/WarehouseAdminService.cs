@@ -60,9 +60,44 @@ namespace Infrastructure.Services
             };
         }
 
-        public string AddProductQuantity(int productNumber)
+        public UpdateProductSuccessModel AddProductQuantity(int productID, uint quantityToAdd)
         {
-            throw new NotImplementedException();
+            var addedProduct = _productsRepository.GetProduct(productID);
+            addedProduct.Quantity += quantityToAdd;
+            _productsRepository.UpdateProduct(addedProduct);
+            return new()
+            {
+                ProductName = addedProduct.Name,
+                ProductId = addedProduct.ProductId,
+                ProductQuantity = addedProduct.Quantity
+            };
+        }
+
+        // Sometimes something can happen to products (expiry, theft, fire damage). Therefore, the administrator should be able to reduce the number of products
+        public UpdateProductSuccessModel DecreaseProductQuantity(int productID, uint quantityToSubtract)
+        {
+            var decreasedProduct = _productsRepository.GetProduct(productID);
+            if (decreasedProduct.Quantity < quantityToSubtract) throw new ArgumentException("Impossible to remove more products than are available");
+            decreasedProduct.Quantity -= quantityToSubtract;
+            _productsRepository.UpdateProduct(decreasedProduct);
+            return new()
+            {
+                ProductName = decreasedProduct.Name,
+                ProductId = decreasedProduct.ProductId,
+                ProductQuantity = decreasedProduct.Quantity
+            };
+        }
+
+        public DeleteProductSuccessModel DeleteProduct(int productID)
+        {
+            var deletedProduct = _productsRepository.GetProduct(productID);
+            _productsRepository.DeleteProduct(deletedProduct);
+            return new()
+            {
+                ProductName = deletedProduct.Name,
+                ProductId = deletedProduct.ProductId,
+                ProductQuantity = deletedProduct.Quantity
+            };
         }
 
         public string GetAllCustomers()

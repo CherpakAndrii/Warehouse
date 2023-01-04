@@ -11,7 +11,9 @@ namespace Infrastructure.Interfaces
         Product ConvertToProduct(AddProductRequestModel product);
         AddProductSuccessModel AddProduct(Product product);
 
-        string AddProductQuantity(int productNumber);
+        UpdateProductSuccessModel AddProductQuantity(int productID, uint quantityToAdd);
+        UpdateProductSuccessModel DecreaseProductQuantity(int productID, uint quantityToSubtract);
+        DeleteProductSuccessModel DeleteProduct(int productID);
 
         string GetAllCustomers();
         string GetAllOrders();
