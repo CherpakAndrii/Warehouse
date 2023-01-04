@@ -2,7 +2,7 @@
 
 namespace Models.Api.Admin.Response.Success
 {
-    public class AddProductSuccessModel
+    public class ActionWithProductSuccessModel
     {
         [JsonPropertyName("productId")]
         public int? ProductId { get; set; }
@@ -13,4 +13,8 @@ namespace Models.Api.Admin.Response.Success
         [JsonPropertyName("productQuantity")]
         public uint? ProductQuantity { get; set; }
     }
+    
+    public class AddProductSuccessModel : ActionWithProductSuccessModel{}
+    public class UpdateProductSuccessModel : ActionWithProductSuccessModel{}
+    public class DeleteProductSuccessModel : ActionWithProductSuccessModel{}
 }
