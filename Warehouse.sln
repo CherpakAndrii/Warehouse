@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{148C215C-9483-4985-929F-39DC61DF0123}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{42B5FACC-9D19-44D8-8B57-078DC89804E1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{170024CE-165F-45DD-8185-316E48E37F5A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{148C215C-9483-4985-929F-39DC61DF0123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{148C215C-9483-4985-929F-39DC61DF0123}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{148C215C-9483-4985-929F-39DC61DF0123}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{148C215C-9483-4985-929F-39DC61DF0123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42B5FACC-9D19-44D8-8B57-078DC89804E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42B5FACC-9D19-44D8-8B57-078DC89804E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42B5FACC-9D19-44D8-8B57-078DC89804E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42B5FACC-9D19-44D8-8B57-078DC89804E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{170024CE-165F-45DD-8185-316E48E37F5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{170024CE-165F-45DD-8185-316E48E37F5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{170024CE-165F-45DD-8185-316E48E37F5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{170024CE-165F-45DD-8185-316E48E37F5A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5974D89-7768-49FC-9088-8FBE902D7712}
+	EndGlobalSection
+EndGlobal
