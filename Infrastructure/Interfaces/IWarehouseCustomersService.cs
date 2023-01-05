@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Interfaces
 {
-    public interface IWarehouseCustomersService
+    public interface IWarehouseCustomersService : IWarehouseUserService
     {
         string GetProducts(string category = null);
         string GetMyOrders();

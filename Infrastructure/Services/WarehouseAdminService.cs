@@ -1,22 +1,18 @@
 ﻿using Infrastructure.Interfaces;
-using Models.Api;
+using Models.Api.Common.Response;
 using Models.Api.Admin.Request;
 using Models.Api.Admin.Response.Success;
+using Models.Api.Common.Request;
 using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Infrastructure.Services
 {
-    public class WarehouseAdminService : IWarehouseAdminService
+    public class WarehouseAdminService : WarehouseUserService, IWarehouseAdminService
     {
-        private readonly IProductsRepository _productsRepository;
-        private readonly ICustomersRepository _customersRepository;
-        private readonly IOrdersRepository _ordersRepository;
-
-        public WarehouseAdminService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository)
+        public WarehouseAdminService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository) : base(productsRepository, customersRepository, ordersRepository)
         {
-            _productsRepository = productsRepository;
-            _customersRepository = customersRepository;
-            _ordersRepository = ordersRepository;
+            
         }
 
         public ErrorResponseModel ValidateProductModel(AddProductRequestModel addProductRequestModel)
@@ -36,14 +32,6 @@ namespace Infrastructure.Services
 
             if (addProductRequestModel.ProductQuantity < 0) 
                 return new() { ErrorMessage = "quantity cannot be less than 0" };
-
-            return null;
-        }
-
-        public ErrorResponseModel TryFindProduct(DeleteProductRequestModel productRequest)
-        {
-            var product = _productsRepository.GetProduct(productRequest.ProductId);
-            if (product is null) return new() { ErrorMessage = "product not found" };
 
             return null;
         }
@@ -85,7 +73,7 @@ namespace Infrastructure.Services
             };
         }
 
-        public DeleteProductSuccessModel DeleteProduct(DeleteProductRequestModel product)
+        public DeleteProductSuccessModel DeleteProduct(ActionWithExistingProductRequestModel product)
         {
             var deletedProduct = _productsRepository.GetProduct(product.ProductId);
             _productsRepository.DeleteProduct(deletedProduct);
@@ -95,6 +83,24 @@ namespace Infrastructure.Services
                 ProductId = deletedProduct.ProductId,
                 ProductQuantity = deletedProduct.Quantity,
                 ProductPrice = deletedProduct.Price
+            };
+        }
+        
+        public RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest)
+        {
+            var rejectedOrder = _ordersRepository.GetOrder(orderRequest.OrderId);
+            if (rejectedOrder.Status == OrderStatus.Rejected) throw new ArgumentException("This order is already rejected");
+            if (rejectedOrder.Status == OrderStatus.Sent) throw new ArgumentException("This order is already sent, can't reject it");
+            rejectedOrder.Status = OrderStatus.Rejected;
+            _ordersRepository.UpdateOrder(rejectedOrder);
+            return new()
+            {
+                OrderId = rejectedOrder.OrderId,
+                Status = rejectedOrder.Status,
+                ProductName = rejectedOrder.Product.Name,
+                Quantity = rejectedOrder.Quantity,
+                OrderPrice = rejectedOrder.OrderPrice,
+                CustomerName = rejectedOrder.User.Name
             };
         }
 

@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api;
+using Models.Api.Common.Response;
 using Models.Api.Admin.Request;
 using Models.Api.Admin.Response.Success;
 
@@ -54,10 +54,58 @@ namespace WebApi.Controllers
                 ErrorResponseModel error = _warehouseAdminService.TryFindProduct(deleteProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
-                DeleteProductSuccessModel response = _warehouseAdminService.DeleteProduct(deleteProductRequestModel.ProductId);
+                DeleteProductSuccessModel response = _warehouseAdminService.DeleteProduct(deleteProductRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(deleteProductRequestModel);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+        
+        [HttpPost]
+        [Route("/update/product/price")]
+        //[Authorize(Policy = "Authorize")]
+        public IActionResult UpdateProductPrice(UpdateProductPriceRequestModel updateProductPriceRequestModel)
+        {
+            try
+            {
+                ErrorResponseModel error = _warehouseAdminService.TryFindProduct(updateProductPriceRequestModel);
+                if (error != null)
+                    return BadRequest(error);
+                UpdateProductPriceSuccessModel response = _warehouseAdminService.UpdateProductPrice(updateProductPriceRequestModel);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(updateProductPriceRequestModel);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+        
+        [HttpPost]
+        [Route("/update/order/reject")]
+        //[Authorize(Policy = "Authorize")]
+        public IActionResult RejectOrder(RejectOrderRequestModel rejectOrderRequest)
+        {
+            try
+            {
+                ErrorResponseModel error = _warehouseAdminService.TryFindOrder(rejectOrderRequest);
+                if (error != null)
+                    return BadRequest(error);
+                RejectOrderSuccessModel response = _warehouseAdminService.RejectOrder(rejectOrderRequest);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(rejectOrderRequest);
             }
             catch (Exception ex)
             {
