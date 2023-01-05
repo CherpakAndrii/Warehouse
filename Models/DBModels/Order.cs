@@ -11,6 +11,7 @@ namespace Models.DBModels
         public bool IsSent { get; set; }
 
         public Product Product { get; set; }
+        public int Quantity { get; set; }
         public double OrderPrice { get; set; }
         public Customer Customer { get; set; }
     }
