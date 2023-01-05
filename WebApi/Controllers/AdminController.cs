@@ -43,5 +43,29 @@ namespace WebApi.Controllers
                 };
             }
         }
+        
+        [HttpPost]
+        [Route("/delete/product")]
+        //[Authorize(Policy = "Authorize")]
+        public IActionResult DeleteProduct(DeleteProductRequestModel deleteProductRequestModel)
+        {
+            try
+            {
+                ErrorResponseModel error = _warehouseAdminService.TryFindProduct(deleteProductRequestModel);
+                if (error != null)
+                    return BadRequest(error);
+                DeleteProductSuccessModel response = _warehouseAdminService.DeleteProduct(deleteProductRequestModel.ProductId);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(deleteProductRequestModel);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
     }
 }

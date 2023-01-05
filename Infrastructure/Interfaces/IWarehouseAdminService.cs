@@ -8,11 +8,9 @@ namespace Infrastructure.Interfaces
     public interface IWarehouseAdminService
     {
         ErrorResponseModel ValidateProductModel(AddProductRequestModel product);
+        ErrorResponseModel TryFindProduct(DeleteProductRequestModel product);
         Product ConvertToProduct(AddProductRequestModel product);
         AddProductSuccessModel AddProduct(Product product);
-
-        UpdateProductSuccessModel AddProductQuantity(int productID, uint quantityToAdd);
-        UpdateProductSuccessModel DecreaseProductQuantity(int productID, uint quantityToSubtract);
         DeleteProductSuccessModel DeleteProduct(int productID);
 
         string GetAllCustomers();
