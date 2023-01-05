@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api.Common.Request;
 using Models.Api.Common.Response;
 using Models.Api.Manager.Request;
 using Models.Api.Manager.Response.Success;

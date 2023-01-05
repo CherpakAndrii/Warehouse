@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Models.Api.Common.Request;
-using Models.DBModels;
+﻿using Models.Api.Common.Request;
 
 namespace Models.Api.Admin.Request
 {

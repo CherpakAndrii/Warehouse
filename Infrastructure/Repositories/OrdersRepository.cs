@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Infrastructure.Interfaces;
+﻿using Infrastructure.Interfaces;
 using Models.DBModels;
 
 namespace Infrastructure.Repositories

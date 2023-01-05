@@ -1,7 +1,4 @@
 ﻿using Infrastructure.Interfaces;
-using Models.Api.Admin.Response.Success;
-using Models.Api.Common.Request;
-using Models.Api.Common.Response;
 using Models.Api.Manager.Request;
 using Models.Api.Manager.Response.Success;
 using Models.DBModels.Enums;

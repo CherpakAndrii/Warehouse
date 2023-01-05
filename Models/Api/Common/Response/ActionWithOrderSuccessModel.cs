@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Models.DBModels;
 using Models.DBModels.Enums;
 
 namespace Models.Api.Common.Response
