@@ -12,9 +12,12 @@ namespace Models.Api.Admin.Response.Success
 
         [JsonPropertyName("productQuantity")]
         public uint? ProductQuantity { get; set; }
+        
+        [JsonPropertyName("productPrice")]
+        public float ProductPrice { get; set; }
     }
     
     public class AddProductSuccessModel : ActionWithProductSuccessModel{}
-    public class UpdateProductSuccessModel : ActionWithProductSuccessModel{}
+    public class UpdateProductPriceSuccessModel : ActionWithProductSuccessModel{}
     public class DeleteProductSuccessModel : ActionWithProductSuccessModel{}
 }

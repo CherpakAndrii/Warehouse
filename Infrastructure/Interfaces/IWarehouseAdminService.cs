@@ -11,7 +11,8 @@ namespace Infrastructure.Interfaces
         ErrorResponseModel TryFindProduct(DeleteProductRequestModel product);
         Product ConvertToProduct(AddProductRequestModel product);
         AddProductSuccessModel AddProduct(Product product);
-        DeleteProductSuccessModel DeleteProduct(int productID);
+        UpdateProductPriceSuccessModel UpdateProductPrice(UpdateProductPriceRequestModel product);
+        DeleteProductSuccessModel DeleteProduct(DeleteProductRequestModel product);
 
         string GetAllCustomers();
         string GetAllOrders();

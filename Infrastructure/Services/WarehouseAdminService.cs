@@ -66,19 +66,35 @@ namespace Infrastructure.Services
             {
                 ProductName = addedProduct.Name,
                 ProductId = addedProduct.ProductId,
-                ProductQuantity = addedProduct.Quantity
+                ProductQuantity = addedProduct.Quantity,
+                ProductPrice = addedProduct.Price
             };
         }
 
-        public DeleteProductSuccessModel DeleteProduct(int productId)
+        public UpdateProductPriceSuccessModel UpdateProductPrice(UpdateProductPriceRequestModel product)
         {
-            var deletedProduct = _productsRepository.GetProduct(productId);
+            var updatedProduct = _productsRepository.GetProduct(product.ProductId);
+            updatedProduct.Price = product.NewProductPrice;
+            _productsRepository.UpdateProduct(updatedProduct);
+            return new()
+            {
+                ProductName = updatedProduct.Name,
+                ProductId = updatedProduct.ProductId,
+                ProductQuantity = updatedProduct.Quantity,
+                ProductPrice = updatedProduct.Price
+            };
+        }
+
+        public DeleteProductSuccessModel DeleteProduct(DeleteProductRequestModel product)
+        {
+            var deletedProduct = _productsRepository.GetProduct(product.ProductId);
             _productsRepository.DeleteProduct(deletedProduct);
             return new()
             {
                 ProductName = deletedProduct.Name,
                 ProductId = deletedProduct.ProductId,
-                ProductQuantity = deletedProduct.Quantity
+                ProductQuantity = deletedProduct.Quantity,
+                ProductPrice = deletedProduct.Price
             };
         }
 
