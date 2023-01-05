@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class CustomersController : CommonController
     {
-
+        public CustomersController(IWarehouseCustomersService warehouseCustomersService) : base(warehouseCustomersService)
+        {
+            
+        }
     }
 }

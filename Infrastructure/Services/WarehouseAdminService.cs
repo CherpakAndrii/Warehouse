@@ -10,7 +10,7 @@ namespace Infrastructure.Services
 {
     public class WarehouseAdminService : WarehouseUserService, IWarehouseAdminService
     {
-        public WarehouseAdminService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository) : base(productsRepository, customersRepository, ordersRepository)
+        public WarehouseAdminService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository) : base(productsRepository, ordersRepository)
         {
             
         }
@@ -29,10 +29,7 @@ namespace Infrastructure.Services
                 return new() { ErrorMessage = "product id already exists" };
             
             if (addProductRequestModel.ProductPrice < 0.01) return new() { ErrorMessage = "price can't be less than 0" };
-
-            if (addProductRequestModel.ProductQuantity < 0) 
-                return new() { ErrorMessage = "quantity cannot be less than 0" };
-
+            
             return null;
         }
 
@@ -55,7 +52,8 @@ namespace Infrastructure.Services
                 ProductName = addedProduct.Name,
                 ProductId = addedProduct.ProductId,
                 ProductQuantity = addedProduct.Quantity,
-                ProductPrice = addedProduct.Price
+                ProductPrice = addedProduct.Price,
+                ProductCategory = addedProduct.Category
             };
         }
 
@@ -69,7 +67,8 @@ namespace Infrastructure.Services
                 ProductName = updatedProduct.Name,
                 ProductId = updatedProduct.ProductId,
                 ProductQuantity = updatedProduct.Quantity,
-                ProductPrice = updatedProduct.Price
+                ProductPrice = updatedProduct.Price,
+                ProductCategory = updatedProduct.Category
             };
         }
 
@@ -82,7 +81,8 @@ namespace Infrastructure.Services
                 ProductName = deletedProduct.Name,
                 ProductId = deletedProduct.ProductId,
                 ProductQuantity = deletedProduct.Quantity,
-                ProductPrice = deletedProduct.Price
+                ProductPrice = deletedProduct.Price,
+                ProductCategory = deletedProduct.Category
             };
         }
         

@@ -5,8 +5,11 @@ using Models.DBModels;
 
 namespace Infrastructure.Services
 {
-    public class WarehouseCustomersService : IWarehouseUserService, IWarehouseCustomersService
+    public class WarehouseCustomersService : WarehouseUserService, IWarehouseCustomersService
     {
+        public WarehouseCustomersService(IProductsRepository productsRepository, IOrdersRepository ordersRepository) : base(productsRepository, ordersRepository)
+        {
+        }
         public string GetMyOrders()
         {
             throw new NotImplementedException();
@@ -23,16 +26,6 @@ namespace Infrastructure.Services
         }
 
         public string MakeOrder(Product product)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ErrorResponseModel TryFindProduct(ActionWithExistingProductRequestModel product)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ErrorResponseModel TryFindOrder(ActionWithExistingOrderRequestModel orderRequest)
         {
             throw new NotImplementedException();
         }
