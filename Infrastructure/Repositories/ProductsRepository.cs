@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Interfaces;
 using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Infrastructure.Repositories
 {
@@ -26,6 +27,12 @@ namespace Infrastructure.Repositories
         public Product GetProduct(string name)
         {
             return _context.Products.Where(c => c.Name == name).FirstOrDefault();
+        }
+
+        public IEnumerable<Product> GetProductList(ProductCategory? category)
+        {
+            if (category is null) return _context.Products;
+            return _context.Products.Where(c => c.Category == category);
         }
 
         public void UpdateProduct(Product product)

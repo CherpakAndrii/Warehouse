@@ -7,5 +7,6 @@ namespace Infrastructure.Interfaces
     {
         ErrorResponseModel TryFindProduct(ActionWithExistingProductRequestModel product);
         ErrorResponseModel TryFindOrder(ActionWithExistingOrderRequestModel orderRequest);
+        GetProductListSuccessModel GetProductsByCategory(GetProductListRequestModel productListRequest);
     }
 }

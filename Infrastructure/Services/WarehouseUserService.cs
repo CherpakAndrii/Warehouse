@@ -7,13 +7,11 @@ namespace Infrastructure.Services
     public abstract class WarehouseUserService : IWarehouseUserService
     {
         protected readonly IProductsRepository _productsRepository;
-        protected readonly ICustomersRepository _customersRepository;
         protected readonly IOrdersRepository _ordersRepository;
 
-        public WarehouseUserService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository)
+        public WarehouseUserService(IProductsRepository productsRepository, IOrdersRepository ordersRepository)
         {
             _productsRepository = productsRepository;
-            _customersRepository = customersRepository;
             _ordersRepository = ordersRepository;
         }
 
@@ -31,6 +29,22 @@ namespace Infrastructure.Services
             if (order is null) return new() { ErrorMessage = "order not found" };
 
             return null;
+        }
+
+        public GetProductListSuccessModel GetProductsByCategory(GetProductListRequestModel productListRequest)
+        {
+            var products = _productsRepository.GetProductList(productListRequest.ProductCategory);
+            List<ProductModel> productModels = new List<ProductModel>();
+            foreach (var product in products)
+            {
+                productModels.Add(product);
+            }
+
+            return new()
+            {
+                Category = productListRequest.ProductCategory,
+                ProductList = productModels
+            };
         }
     }
 }
