@@ -8,7 +8,7 @@ namespace Infrastructure.Services;
 public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerService
 {
 
-    public WarehouseManagerService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository) : base(productsRepository, customersRepository, ordersRepository) { }
+    public WarehouseManagerService(IProductsRepository productsRepository, IOrdersRepository ordersRepository) : base(productsRepository, ordersRepository) { }
 
     public UpdateProductQuantitySuccessModel AddProductQuantity(IncreaseProductQuantityRequestModel product)
     {
@@ -20,7 +20,8 @@ public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerSe
             ProductName = increasedQuantityProduct.Name,
             ProductId = increasedQuantityProduct.ProductId,
             ProductQuantity = increasedQuantityProduct.Quantity, 
-            ProductPrice = increasedQuantityProduct.Price
+            ProductPrice = increasedQuantityProduct.Price,
+            ProductCategory = increasedQuantityProduct.Category
         };
     }
 
@@ -35,7 +36,9 @@ public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerSe
         {
             ProductName = decreasedQuantityProduct.Name,
             ProductId = decreasedQuantityProduct.ProductId,
-            ProductQuantity = decreasedQuantityProduct.Quantity
+            ProductQuantity = decreasedQuantityProduct.Quantity,
+            ProductPrice = decreasedQuantityProduct.Price,
+            ProductCategory = decreasedQuantityProduct.Category
         };
     }
 

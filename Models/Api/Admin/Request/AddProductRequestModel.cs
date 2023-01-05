@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Models.Api.Admin.Request
 {
@@ -16,6 +17,10 @@ namespace Models.Api.Admin.Request
 
         [JsonPropertyName("productQuantity")]
         public uint ProductQuantity { get; set; }
+        
+        [JsonPropertyName("category")]
+        public ProductCategory ProductCategory { get; set; }
+        
 
         public Product ConvertToProduct()
             => new()
@@ -23,7 +28,8 @@ namespace Models.Api.Admin.Request
                 ProductId = ProductId,
                 Name = ProductName,
                 Price = ProductPrice,
-                Quantity = ProductQuantity
+                Quantity = ProductQuantity,
+                Category = ProductCategory
             };
     }
 }

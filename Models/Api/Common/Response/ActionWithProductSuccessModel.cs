@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Models.DBModels.Enums;
 
 namespace Models.Api.Common.Response
 {
@@ -15,5 +16,8 @@ namespace Models.Api.Common.Response
         
         [JsonPropertyName("productPrice")]
         public float ProductPrice { get; set; }
+        
+        [JsonPropertyName("category")]
+        public ProductCategory ProductCategory { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Models.DBModels.Enums;
 
 namespace Models.DBModels
 {
@@ -10,6 +11,7 @@ namespace Models.DBModels
 
         public string Name { get; set; }
         public float Price { get; set; }
-        public uint? Quantity { get; set; }
+        public uint Quantity { get; set; }
+        public ProductCategory Category { get; set; }
     }
 }
