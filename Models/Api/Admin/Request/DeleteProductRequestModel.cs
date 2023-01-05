@@ -1,11 +1,8 @@
-﻿using System.Text.Json.Serialization;
-using Models.DBModels;
+﻿using Models.Api.Common.Request;
 
-namespace Models.Api.Admin.Request
+namespace Models.Api.Admin.Request;
+
+public class DeleteProductRequestModel : ActionWithExistingProductRequestModel
 {
-    public class DeleteProductRequestModel
-    {
-        [JsonPropertyName("productId")]
-        public int ProductId { get; set; }
-    }
+    
 }
