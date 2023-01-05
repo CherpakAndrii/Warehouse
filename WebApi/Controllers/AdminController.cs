@@ -31,7 +31,7 @@ namespace WebApi.Controllers
                 AddProductSuccessModel response = _warehouseAdminService.AddProduct(product);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(addProductRequestModel);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -55,7 +55,7 @@ namespace WebApi.Controllers
                 DeleteProductSuccessModel response = _warehouseAdminService.DeleteProduct(deleteProductRequestModel);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(deleteProductRequestModel);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@ namespace WebApi.Controllers
                 UpdateProductPriceSuccessModel response = _warehouseAdminService.UpdateProductPrice(updateProductPriceRequestModel);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(updateProductPriceRequestModel);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -103,7 +103,7 @@ namespace WebApi.Controllers
                 RejectOrderSuccessModel response = _warehouseAdminService.RejectOrder(rejectOrderRequest);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(rejectOrderRequest);
+                return Ok(response);
             }
             catch (Exception ex)
             {

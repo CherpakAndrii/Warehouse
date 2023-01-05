@@ -30,7 +30,7 @@ namespace WebApi.Controllers
                 ActionWithProductSuccessModel response = _warehouseManagerService.AddProductQuantity(increaseProductQuantityRequestModel);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(increaseProductQuantityRequestModel);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace WebApi.Controllers
                 ActionWithProductSuccessModel response = _warehouseManagerService.DecreaseProductQuantity(decreaseProductQuantityRequestModel);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(decreaseProductQuantityRequestModel);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace WebApi.Controllers
                 SendOrderSuccessModel response = _warehouseManagerService.SendOrder(sendOrderRequest);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(sendOrderRequest);
+                return Ok(response);
             }
             catch (Exception ex)
             {
