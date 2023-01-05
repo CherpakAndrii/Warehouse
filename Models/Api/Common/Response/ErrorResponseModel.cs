@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Models.Api
+namespace Models.Api.Common.Response
 {
     public class ErrorResponseModel
     {

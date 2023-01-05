@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Models.Api.Admin.Response.Success
+namespace Models.Api.Common.Response
 {
-    public class ActionWithProductSuccessModel
+    public abstract class ActionWithProductSuccessModel
     {
         [JsonPropertyName("productId")]
         public int? ProductId { get; set; }
@@ -16,8 +16,4 @@ namespace Models.Api.Admin.Response.Success
         [JsonPropertyName("productPrice")]
         public float ProductPrice { get; set; }
     }
-    
-    public class AddProductSuccessModel : ActionWithProductSuccessModel{}
-    public class UpdateProductPriceSuccessModel : ActionWithProductSuccessModel{}
-    public class DeleteProductSuccessModel : ActionWithProductSuccessModel{}
 }
