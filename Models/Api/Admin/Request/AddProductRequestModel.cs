@@ -9,17 +9,20 @@ namespace Models.Api.Admin.Request
         [JsonPropertyName("productName")]
         public string ProductName { get; set; }
 
-        [JsonPropertyName("productNumber")]
+        [JsonPropertyName("productId")]
         public int? ProductId { get; set; }
+        [JsonPropertyName("productPrice")]
+        public float ProductPrice { get; set; }
 
         [JsonPropertyName("productQuantity")]
-        public uint? ProductQuantity { get; set; }
+        public uint ProductQuantity { get; set; }
 
         public Product ConvertToProduct()
             => new()
             {
-                Name = ProductName,
                 ProductId = ProductId,
+                Name = ProductName,
+                Price = ProductPrice,
                 Quantity = ProductQuantity
             };
     }

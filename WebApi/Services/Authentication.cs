@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Models.Api;
+using Models.Api.Common.Response;
 using Newtonsoft.Json;
 using System.Text;
 

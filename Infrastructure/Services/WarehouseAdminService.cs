@@ -1,22 +1,18 @@
 ﻿using Infrastructure.Interfaces;
-using Models.Api;
+using Models.Api.Common.Response;
 using Models.Api.Admin.Request;
 using Models.Api.Admin.Response.Success;
+using Models.Api.Common.Request;
 using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Infrastructure.Services
 {
-    public class WarehouseAdminService : IWarehouseAdminService
+    public class WarehouseAdminService : WarehouseUserService, IWarehouseAdminService
     {
-        private readonly IProductsRepository _productsRepository;
-        private readonly ICustomersRepository _customersRepository;
-        private readonly IOrdersRepository _ordersRepository;
-
-        public WarehouseAdminService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository)
+        public WarehouseAdminService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository) : base(productsRepository, customersRepository, ordersRepository)
         {
-            _productsRepository = productsRepository;
-            _customersRepository = customersRepository;
-            _ordersRepository = ordersRepository;
+            
         }
 
         public ErrorResponseModel ValidateProductModel(AddProductRequestModel addProductRequestModel)
@@ -31,6 +27,8 @@ namespace Infrastructure.Services
 
             if (addProductRequestModel.ProductId is not null && _productsRepository.GetProduct((int)addProductRequestModel.ProductId) is not null) 
                 return new() { ErrorMessage = "product id already exists" };
+            
+            if (addProductRequestModel.ProductPrice < 0.01) return new() { ErrorMessage = "price can't be less than 0" };
 
             if (addProductRequestModel.ProductQuantity < 0) 
                 return new() { ErrorMessage = "quantity cannot be less than 0" };
@@ -56,13 +54,54 @@ namespace Infrastructure.Services
             {
                 ProductName = addedProduct.Name,
                 ProductId = addedProduct.ProductId,
-                ProductQuantity = addedProduct.Quantity
+                ProductQuantity = addedProduct.Quantity,
+                ProductPrice = addedProduct.Price
             };
         }
 
-        public string AddProductQuantity(int productNumber)
+        public UpdateProductPriceSuccessModel UpdateProductPrice(UpdateProductPriceRequestModel product)
         {
-            throw new NotImplementedException();
+            var updatedProduct = _productsRepository.GetProduct(product.ProductId);
+            updatedProduct.Price = product.NewProductPrice;
+            _productsRepository.UpdateProduct(updatedProduct);
+            return new()
+            {
+                ProductName = updatedProduct.Name,
+                ProductId = updatedProduct.ProductId,
+                ProductQuantity = updatedProduct.Quantity,
+                ProductPrice = updatedProduct.Price
+            };
+        }
+
+        public DeleteProductSuccessModel DeleteProduct(ActionWithExistingProductRequestModel product)
+        {
+            var deletedProduct = _productsRepository.GetProduct(product.ProductId);
+            _productsRepository.DeleteProduct(deletedProduct);
+            return new()
+            {
+                ProductName = deletedProduct.Name,
+                ProductId = deletedProduct.ProductId,
+                ProductQuantity = deletedProduct.Quantity,
+                ProductPrice = deletedProduct.Price
+            };
+        }
+        
+        public RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest)
+        {
+            var rejectedOrder = _ordersRepository.GetOrder(orderRequest.OrderId);
+            if (rejectedOrder.Status == OrderStatus.Rejected) throw new ArgumentException("This order is already rejected");
+            if (rejectedOrder.Status == OrderStatus.Sent) throw new ArgumentException("This order is already sent, can't reject it");
+            rejectedOrder.Status = OrderStatus.Rejected;
+            _ordersRepository.UpdateOrder(rejectedOrder);
+            return new()
+            {
+                OrderId = rejectedOrder.OrderId,
+                Status = rejectedOrder.Status,
+                ProductName = rejectedOrder.Product.Name,
+                Quantity = rejectedOrder.Quantity,
+                OrderPrice = rejectedOrder.OrderPrice,
+                CustomerName = rejectedOrder.User.Name
+            };
         }
 
         public string GetAllCustomers()

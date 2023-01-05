@@ -4,12 +4,12 @@ namespace Infrastructure.Interfaces
 {
     public interface ICustomersRepository
     {
-        void CreateCustomer(Customer customer);
-        Customer GetCustomer(int customerId);
-        void UpdateCustomer(Customer customer);
-        void DeleteCustomer(Customer customer);
+        void CreateCustomer(User user);
+        User GetCustomer(int customerId);
+        void UpdateCustomer(User user);
+        void DeleteCustomer(User user);
 
-        Customer GetCustomerByLogin(string login);
-        List<Customer> GetAllCustomers();
+        User GetCustomerByLogin(string login);
+        List<User> GetAllCustomers();
     }
 }
