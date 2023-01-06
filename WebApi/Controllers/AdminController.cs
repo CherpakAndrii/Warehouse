@@ -9,9 +9,9 @@ namespace WebApi.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class AdminController : CommonController
+    public class AdminController : WareHouseWorkerController
     {
-        private IWarehouseAdminService _warehouseAdminService;
+        protected IWarehouseAdminService _warehouseAdminService;
         public AdminController(IWarehouseAdminService warehouseAdminService, IWarehouseCustomersService warehouseCustomersService) : base(warehouseCustomersService)
         {
             _warehouseAdminService = warehouseAdminService;

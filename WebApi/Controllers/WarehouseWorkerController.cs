@@ -8,22 +8,18 @@ namespace WebApi.Controllers
 {
     [Route("api")]
     [ApiController]
-    public abstract class CommonController : ControllerBase
+    public abstract class WareHouseWorkerController : CommonController
     {
-        protected IWarehouseCustomersService _warehouseCustomersService;
-        public CommonController(IWarehouseCustomersService warehouseCustomersService)
-        {
-            _warehouseCustomersService = warehouseCustomersService;
-        }
+        public WareHouseWorkerController(IWarehouseCustomersService warehouseCustomersService) : base(warehouseCustomersService) { }
 
         [HttpPost]
-        [Route("/products")]
+        [Route("/orders")]
         //[Authorize(Policy = "Authorize")]
-        public IActionResult GetProductList(GetProductListRequestModel getProductsRequestModel)
+        public IActionResult GetOrderList(GetOrderListRequestModel getOrdersRequestModel)
         {
             try
             {
-                GetProductListSuccessModel response = _warehouseCustomersService.GetProductsByCategory(getProductsRequestModel);
+                GetOrderListSuccessModel response = _warehouseCustomersService.GetOrderList(getOrdersRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);
