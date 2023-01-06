@@ -1,6 +1,8 @@
 ﻿using Infrastructure.Interfaces;
 using Models.Api.Common.Response;
 using Models.Api.Common.Request;
+using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Infrastructure.Services
 {
@@ -8,11 +10,13 @@ namespace Infrastructure.Services
     {
         protected readonly IProductsRepository _productsRepository;
         protected readonly IOrdersRepository _ordersRepository;
+        protected readonly ISessionsRepository _sessionsRepository;
 
-        public WarehouseUserService(IProductsRepository productsRepository, IOrdersRepository ordersRepository)
+        public WarehouseUserService(IProductsRepository productsRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository)
         {
             _productsRepository = productsRepository;
             _ordersRepository = ordersRepository;
+            _sessionsRepository = sessionsRepository;
         }
 
         public ErrorResponseModel TryFindProduct(ActionWithExistingProductRequestModel productRequest)
@@ -60,6 +64,18 @@ namespace Infrastructure.Services
             {
                 OrderList = orderModels
             };
+        }
+
+        public (ErrorResponseModel, User) CheckRequest(CommonUserRequestModel request, AccessRights neededRights)
+        {
+            User requestUser = _sessionsRepository.GetUserBySessionId(request.SessionId);
+            if (requestUser is null) return (new() { ErrorMessage = "401 Unauthorized" }, null);
+            var r = requestUser.Role;
+            if (r == UserRole.Admin && (int)neededRights % 2 == 0 ||
+                r == UserRole.Manager && (int)neededRights % 3 != 0 ||
+                r == UserRole.Customer && (int)neededRights > 2)
+                return (null, requestUser);
+            return (new() { ErrorMessage = "403 Forbidden" }, null);
         }
     }
 }

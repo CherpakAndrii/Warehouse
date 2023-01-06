@@ -8,7 +8,7 @@ namespace Infrastructure.Services;
 public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerService
 {
 
-    public WarehouseManagerService(IProductsRepository productsRepository, IOrdersRepository ordersRepository) : base(productsRepository, ordersRepository) { }
+    public WarehouseManagerService(IProductsRepository productsRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository) : base(productsRepository, ordersRepository, sessionsRepository) { }
 
     public UpdateProductQuantitySuccessModel AddProductQuantity(IncreaseProductQuantityRequestModel product)
     {
@@ -51,12 +51,7 @@ public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerSe
         _ordersRepository.UpdateOrder(sentOrder);
         return new()
         {
-            OrderId = sentOrder.OrderId,
-            Status = sentOrder.Status,
-            ProductName = sentOrder.Product.Name,
-            Quantity = sentOrder.Quantity,
-            OrderPrice = sentOrder.OrderPrice,
-            CustomerName = sentOrder.User.Name
+            Order = sentOrder
         };
     }
 

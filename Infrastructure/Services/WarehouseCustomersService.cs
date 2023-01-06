@@ -1,31 +1,34 @@
 ﻿using Infrastructure.Interfaces;
-using Models.Api.Common.Request;
 using Models.Api.Common.Response;
-using Models.DBModels;
+using Models.Api.Customer.Request;
 
 namespace Infrastructure.Services
 {
     public class WarehouseCustomersService : WarehouseUserService, IWarehouseCustomersService
     {
-        public WarehouseCustomersService(IProductsRepository productsRepository, IOrdersRepository ordersRepository) : base(productsRepository, ordersRepository)
+        public WarehouseCustomersService(IProductsRepository productsRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository) : base(productsRepository, ordersRepository, sessionsRepository) { }
+
+        public ActionWithOrderSuccessModel MakeOrder(CreateOrderRequestModel createRequest)
         {
+            _ordersRepository.CreateOrder(createRequest.Order);
+            var addedOrder = _ordersRepository.GetOrder();
+            return new()
+            {
+                Order = addedOrder
+            };
         }
-        public string GetMyOrders()
+
+        public ActionWithOrderSuccessModel RemoveOrder(RemoveOrderRequestModel removeOrderRequest)
         {
-            throw new NotImplementedException();
+            var deletedOrder = _ordersRepository.GetOrder(removeOrderRequest.OrderId);
+            _ordersRepository.DeleteOrder(deletedOrder);
+            return new()
+            {
+                Order = deletedOrder
+            };
         }
 
         public string GetProductInfo()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetProducts(string category = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string MakeOrder(Product product)
         {
             throw new NotImplementedException();
         }

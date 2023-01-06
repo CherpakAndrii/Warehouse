@@ -10,10 +10,7 @@ namespace Infrastructure.Services
 {
     public class WarehouseAdminService : WarehouseUserService, IWarehouseAdminService
     {
-        public WarehouseAdminService(IProductsRepository productsRepository, ICustomersRepository customersRepository, IOrdersRepository ordersRepository) : base(productsRepository, ordersRepository)
-        {
-            
-        }
+        public WarehouseAdminService(IProductsRepository productsRepository, IUsersRepository usersRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository) : base(productsRepository, ordersRepository, sessionsRepository) { }
 
         public ErrorResponseModel ValidateProductModel(AddProductRequestModel addProductRequestModel)
         {
@@ -95,12 +92,7 @@ namespace Infrastructure.Services
             _ordersRepository.UpdateOrder(rejectedOrder);
             return new()
             {
-                OrderId = rejectedOrder.OrderId,
-                Status = rejectedOrder.Status,
-                ProductName = rejectedOrder.Product.Name,
-                Quantity = rejectedOrder.Quantity,
-                OrderPrice = rejectedOrder.OrderPrice,
-                CustomerName = rejectedOrder.User.Name
+                Order = rejectedOrder
             };
         }
 

@@ -1,5 +1,7 @@
 ﻿using Models.Api.Common.Request;
 using Models.Api.Common.Response;
+using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Infrastructure.Interfaces
 {
@@ -9,5 +11,6 @@ namespace Infrastructure.Interfaces
         ErrorResponseModel TryFindOrder(ActionWithExistingOrderRequestModel orderRequest);
         GetProductListSuccessModel GetProductsByCategory(GetProductListRequestModel productListRequest);
         GetOrderListSuccessModel GetOrderList(GetOrderListRequestModel orderListRequest);
+        (ErrorResponseModel, User) CheckRequest(CommonUserRequestModel request, AccessRights neededRights);
     }
 }

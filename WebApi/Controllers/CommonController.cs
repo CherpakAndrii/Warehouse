@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Api.Common.Response;
 using Models.Api.Common.Request;
+using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
 {
@@ -23,6 +25,8 @@ namespace WebApi.Controllers
         {
             try
             {
+                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(getProductsRequestModel, AccessRights.Any);
+                if (error is not null) return BadRequest(error);
                 GetProductListSuccessModel response = _warehouseCustomersService.GetProductsByCategory(getProductsRequestModel);
                 if (response == null)
                     return StatusCode(500);

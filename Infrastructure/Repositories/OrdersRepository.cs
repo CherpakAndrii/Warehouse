@@ -32,7 +32,7 @@ namespace Infrastructure.Repositories
         public IEnumerable<Order> GetOrderList(int? userId, int? productId)
         {
             IEnumerable<Order> orderList = _context.Orders;
-            if (userId is not null) orderList = orderList.Where(o => o.User.CustomerId == userId);
+            if (userId is not null) orderList = orderList.Where(o => o.User.UserId == userId);
             if (productId is not null) orderList = orderList.Where(o => o.Product.ProductId == productId);
             return orderList;
         }

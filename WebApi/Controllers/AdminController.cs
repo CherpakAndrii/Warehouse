@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Api.Common.Response;
 using Models.Api.Admin.Request;
 using Models.Api.Admin.Response.Success;
+using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
 {
@@ -24,8 +26,10 @@ namespace WebApi.Controllers
         {
             try
             {
+                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(addProductRequestModel, AccessRights.Admin);
+                if (error is not null) return BadRequest(error);
                 var product = addProductRequestModel.ConvertToProduct();
-                ErrorResponseModel error = _warehouseAdminService.ValidateProductModel(addProductRequestModel);
+                error = _warehouseAdminService.ValidateProductModel(addProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
                 AddProductSuccessModel response = _warehouseAdminService.AddProduct(product);
@@ -49,7 +53,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                ErrorResponseModel error = _warehouseAdminService.TryFindProduct(deleteProductRequestModel);
+                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
+                if (error is not null) return BadRequest(error);
+                error = _warehouseAdminService.TryFindProduct(deleteProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
                 DeleteProductSuccessModel response = _warehouseAdminService.DeleteProduct(deleteProductRequestModel);
@@ -73,7 +79,10 @@ namespace WebApi.Controllers
         {
             try
             {
-                ErrorResponseModel error = _warehouseAdminService.TryFindProduct(updateProductPriceRequestModel);
+                
+                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
+                if (error is not null) return BadRequest(error);
+                error = _warehouseAdminService.TryFindProduct(updateProductPriceRequestModel);
                 if (error != null)
                     return BadRequest(error);
                 UpdateProductPriceSuccessModel response = _warehouseAdminService.UpdateProductPrice(updateProductPriceRequestModel);
@@ -97,7 +106,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                ErrorResponseModel error = _warehouseAdminService.TryFindOrder(rejectOrderRequest);
+                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
+                if (error is not null) return BadRequest(error);
+                error = _warehouseAdminService.TryFindOrder(rejectOrderRequest);
                 if (error != null)
                     return BadRequest(error);
                 RejectOrderSuccessModel response = _warehouseAdminService.RejectOrder(rejectOrderRequest);

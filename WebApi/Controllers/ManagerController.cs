@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Api.Common.Response;
 using Models.Api.Manager.Request;
 using Models.Api.Manager.Response.Success;
+using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
 {
@@ -24,7 +26,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                ErrorResponseModel error = _warehouseManagerService.TryFindProduct(increaseProductQuantityRequestModel);
+                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(increaseProductQuantityRequestModel, AccessRights.Manager);
+                if (error is not null) return BadRequest(error);
+                error = _warehouseManagerService.TryFindProduct(increaseProductQuantityRequestModel);
                 if (error != null)
                     return BadRequest(error);
                 ActionWithProductSuccessModel response = _warehouseManagerService.AddProductQuantity(increaseProductQuantityRequestModel);
@@ -48,7 +52,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                ErrorResponseModel error = _warehouseManagerService.TryFindProduct(decreaseProductQuantityRequestModel);
+                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(decreaseProductQuantityRequestModel, AccessRights.Manager);
+                if (error is not null) return BadRequest(error);
+                error = _warehouseManagerService.TryFindProduct(decreaseProductQuantityRequestModel);
                 if (error != null)
                     return BadRequest(error);
                 ActionWithProductSuccessModel response = _warehouseManagerService.DecreaseProductQuantity(decreaseProductQuantityRequestModel);
@@ -72,7 +78,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                ErrorResponseModel error = _warehouseManagerService.TryFindOrder(sendOrderRequest);
+                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(sendOrderRequest, AccessRights.Manager);
+                if (error is not null) return BadRequest(error);
+                error = _warehouseManagerService.TryFindOrder(sendOrderRequest);
                 if (error != null)
                     return BadRequest(error);
                 SendOrderSuccessModel response = _warehouseManagerService.SendOrder(sendOrderRequest);

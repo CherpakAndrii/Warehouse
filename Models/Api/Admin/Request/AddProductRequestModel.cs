@@ -4,7 +4,7 @@ using Models.DBModels.Enums;
 
 namespace Models.Api.Admin.Request
 {
-    public class AddProductRequestModel
+    public class AddProductRequestModel : Models.Api.Common.Request.CommonUserRequestModel
     {
 
         [JsonPropertyName("productName")]

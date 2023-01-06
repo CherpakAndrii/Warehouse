@@ -2,7 +2,7 @@
 
 namespace Models.Api.Common.Request
 {
-    public abstract class GetOrderListRequestModel
+    public class GetOrderListRequestModel : CommonUserRequestModel
     {
         [JsonPropertyName("productId")]
         public int? ProductId { get; set; }

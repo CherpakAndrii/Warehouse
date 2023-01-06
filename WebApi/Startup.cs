@@ -70,7 +70,7 @@ namespace WebApi
             services.AddTransient<IWarehouseManagerService, WarehouseManagerService>();
             services.AddTransient<IWarehouseCustomersService, WarehouseCustomersService>();
             services.AddTransient<IProductsRepository, ProductsRepository>();
-            services.AddTransient<ICustomersRepository, CustomersRepository>();
+            services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IOrdersRepository, OrdersRepository>();
             services.AddSingleton<IAuthorizationHandler, Authentication>();
             services.AddControllers();

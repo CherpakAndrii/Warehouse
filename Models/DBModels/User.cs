@@ -7,8 +7,9 @@ namespace Models.DBModels
     public class User
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? CustomerId { get; set; }
+        public int? UserId { get; set; }
         public string Login { get; set; }
+        public string EncryptedPassword { get; set; }
 
         public string Name { get; set; }
 
