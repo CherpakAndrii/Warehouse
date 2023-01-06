@@ -29,6 +29,14 @@ namespace Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public IEnumerable<Order> GetOrderList(int? userId, int? productId)
+        {
+            IEnumerable<Order> orderList = _context.Orders;
+            if (userId is not null) orderList = orderList.Where(o => o.User.CustomerId == userId);
+            if (productId is not null) orderList = orderList.Where(o => o.Product.ProductId == productId);
+            return orderList;
+        }
+
         public void DeleteOrder(Order order)
         {
             _context.Orders.Remove(order);

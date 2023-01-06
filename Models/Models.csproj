@@ -8,6 +8,7 @@
   <ItemGroup>
     <Folder Include="Api\Admin\Response\Error\" />
     <Folder Include="Api\Customer\" />
+    <Folder Include="Api\Customer\Request" />
   </ItemGroup>
 
 </Project>

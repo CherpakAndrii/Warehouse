@@ -46,5 +46,20 @@ namespace Infrastructure.Services
                 ProductList = productModels
             };
         }
+        
+        public GetOrderListSuccessModel GetOrderList(GetOrderListRequestModel orderListRequest)
+        {
+            var orders = _ordersRepository.GetOrderList(orderListRequest.UserId, orderListRequest.ProductId);
+            List<OrderModel> orderModels = new List<OrderModel>();
+            foreach (var order in orders)
+            {
+                orderModels.Add(order);
+            }
+
+            return new()
+            {
+                OrderList = orderModels
+            };
+        }
     }
 }

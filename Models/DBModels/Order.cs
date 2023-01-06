@@ -8,9 +8,7 @@ namespace Models.DBModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int OrderId { get; set; }
-
         public OrderStatus Status { get; set; }
-
         public Product Product { get; set; }
         public int Quantity { get; set; }
         public double OrderPrice { get; set; }

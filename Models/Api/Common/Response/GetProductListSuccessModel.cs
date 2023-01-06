@@ -9,7 +9,7 @@ namespace Models.Api.Common.Response
         [JsonPropertyName("productCategory")]
         public ProductCategory? Category { get; set; }
 
-        [JsonPropertyName("productName")]
+        [JsonPropertyName("productList")]
         public List<ProductModel> ProductList { get; set; }
     }
 
