@@ -9,7 +9,5 @@ namespace Models.Api.Customer.Request
         public ProductModel Product { get; set; }
         [JsonPropertyName("quantity")]
         public int Quantity { get; set; }
-        [JsonPropertyName("price")]
-        public double OrderPrice { get; set; }
     }
 }

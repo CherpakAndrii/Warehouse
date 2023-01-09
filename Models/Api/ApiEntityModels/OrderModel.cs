@@ -17,7 +17,7 @@ public class OrderModel
     [JsonPropertyName("price")]
     public double OrderPrice { get; set; }
     [JsonPropertyName("user")]
-    public User User { get; set; }
+    public UserModel User { get; set; }
         
     public OrderModel(Order order)
     {

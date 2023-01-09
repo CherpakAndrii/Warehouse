@@ -5,8 +5,7 @@ namespace Infrastructure.Interfaces;
 
 public interface IWarehouseManagerService : IWarehouseUserService
 {
-    UpdateProductQuantitySuccessModel AddProductQuantity(IncreaseProductQuantityRequestModel product);
-    UpdateProductQuantitySuccessModel DecreaseProductQuantity(DecreaseProductQuantityRequestModel product);
+    UpdateProductQuantitySuccessModel ChangeProductQuantity(UpdateProductQuantityRequestModel product);
     SendOrderSuccessModel SendOrder(SendOrderRequestModel sendOrderRequest);
 
     string GetAllOrders();

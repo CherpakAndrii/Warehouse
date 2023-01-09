@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Api.Common.Response;
 using Models.Api.Common.Request;
@@ -11,7 +10,7 @@ namespace WebApi.Controllers
     [ApiController]
     public abstract class WareHouseWorkerController : CommonController
     {
-        public WareHouseWorkerController(IWarehouseCustomersService warehouseCustomersService) : base(warehouseCustomersService) { }
+        protected WareHouseWorkerController(IWarehouseCustomersService warehouseCustomersService) : base(warehouseCustomersService) { }
 
         [HttpGet]
         [Route("/orders")]

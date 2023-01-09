@@ -13,7 +13,7 @@ namespace WebApi.Controllers
     [ApiController]
     public class ManagerController : WareHouseWorkerController
     {
-        protected IWarehouseManagerService _warehouseManagerService;
+        private readonly IWarehouseManagerService _warehouseManagerService;
         public ManagerController(IWarehouseManagerService warehouseManagerService, IWarehouseCustomersService warehouseCustomersService): base (warehouseCustomersService)
         {
             _warehouseManagerService = warehouseManagerService;
@@ -22,16 +22,16 @@ namespace WebApi.Controllers
         [HttpPut]
         [Route("/update/product/quantity")]
         //[Authorize(Policy = "Authorize")]
-        public IActionResult DecreaseProductQuantity(DecreaseProductQuantityRequestModel decreaseProductQuantityRequestModel)
+        public IActionResult ChangeProductQuantity(UpdateProductQuantityRequestModel updateProductQuantityRequestModel)
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(decreaseProductQuantityRequestModel, AccessRights.Manager);
+                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(updateProductQuantityRequestModel, AccessRights.Manager);
                 if (error is not null) return BadRequest(error);
-                error = _warehouseManagerService.TryFindProduct(decreaseProductQuantityRequestModel);
+                error = _warehouseManagerService.TryFindProduct(updateProductQuantityRequestModel);
                 if (error != null)
                     return BadRequest(error);
-                ActionWithProductSuccessModel response = _warehouseManagerService.DecreaseProductQuantity(decreaseProductQuantityRequestModel);
+                ActionWithProductSuccessModel response = _warehouseManagerService.ChangeProductQuantity(updateProductQuantityRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);
@@ -52,7 +52,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(sendOrderRequest, AccessRights.Manager);
+                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(sendOrderRequest, AccessRights.Manager);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseManagerService.TryFindOrder(sendOrderRequest);
                 if (error != null)

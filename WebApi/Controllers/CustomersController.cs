@@ -55,18 +55,12 @@ namespace WebApi.Controllers
             {
                 (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(createOrderRequest, AccessRights.Customer);
                 if (error is not null) return BadRequest(error);
-                Order order = new()
-                {
-                    Status = OrderStatus.Created,
-                    Product = createOrderRequest.Product,
-                    Quantity = createOrderRequest.Quantity,
-                    OrderPrice = createOrderRequest.OrderPrice,
-                    User = user
-                };
                 CreateOrderRequestModel request = new()
                 {
                     SessionId = createOrderRequest.SessionId, 
-                    Order = order
+                    Product = createOrderRequest.Product,
+                    Quantity = createOrderRequest.Quantity,
+                    User = user
                 };
                 ActionWithOrderSuccessModel response = _warehouseCustomersService.MakeOrder(request);
                 if (response == null)

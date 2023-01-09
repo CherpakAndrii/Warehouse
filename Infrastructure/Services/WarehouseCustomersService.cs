@@ -1,6 +1,8 @@
 ﻿using Infrastructure.Interfaces;
 using Models.Api.Common.Response;
 using Models.Api.Customer.Request;
+using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Infrastructure.Services
 {
@@ -10,8 +12,16 @@ namespace Infrastructure.Services
 
         public ActionWithOrderSuccessModel MakeOrder(CreateOrderRequestModel createRequest)
         {
-            _ordersRepository.CreateOrder(createRequest.Order);
-            var addedOrder = _ordersRepository.GetOrder();
+            Order newOrder = new Order()
+            {
+                Status = OrderStatus.Created,
+                Product = createRequest.Product,
+                Quantity = createRequest.Quantity,
+                OrderPrice = createRequest.Product.Price * createRequest.Quantity,
+                User = createRequest.User
+            };
+            _ordersRepository.CreateOrder(newOrder);
+            var addedOrder = _ordersRepository.GetJustCreatedOrder(newOrder); // to get orderId
             return new() 
             {
                 Order = addedOrder

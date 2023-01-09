@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Interfaces;
 using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Infrastructure.Repositories
 {
@@ -20,7 +21,17 @@ namespace Infrastructure.Repositories
 
         public Order GetOrder(int orderId)
         {
-            return _context.Orders.Where(c => c.OrderId == orderId).FirstOrDefault();
+            return _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefault();
+        }
+
+        public Order GetJustCreatedOrder(Order order)
+        {
+            return _context.Orders.LastOrDefault(o => 
+                o.User == order.User && 
+                o.Product == order.Product &&
+                o.Quantity == order.Quantity &&
+                o.OrderPrice == order.OrderPrice &&
+                o.Status == OrderStatus.Created);
         }
 
         public void UpdateOrder(Order order)
