@@ -1,10 +1,8 @@
 ﻿using Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Api.Common.Response;
 using Models.Api.Manager.Request;
 using Models.Api.Manager.Response.Success;
-using Models.DBModels;
 using Models.DBModels.Enums;
 
 namespace WebApi.Controllers

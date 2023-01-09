@@ -2,6 +2,7 @@
 using Models.Api.Common.Request;
 using Models.Api.Common.Response;
 using Models.DBModels;
+using Models.DBModels.Enums;
 
 namespace Infrastructure.Services;
 
@@ -36,7 +37,29 @@ public class WarehouseAuthService : IWarehouseAuthService
 
     public SignInResponseModel TrySignIn(SignInRequestModel userData)
     {
-        throw new NotImplementedException();
+        if (_usersRepository.GetUserByLogin(userData.Login) is not null)
+            return new SignInResponseModel()
+            {
+                Success = false,
+                Message = "login is already in use"
+            };
+        string encryptedPassword = _decryptor.EncryptPassword(userData.Login, userData.Password);
+        _usersRepository.CreateUser(new User()
+        {
+            Login = userData.Login,
+            Name = userData.Name,
+            Email = userData.Email,
+            EncryptedPassword = encryptedPassword,
+            Phone = userData.Phone,
+            Role = UserRole.Customer
+        });
+        User createdUser = _usersRepository.GetUserByLogin(userData.Login);
+        return new SignInResponseModel()
+        {
+            CreatedUser = createdUser,
+            Success = true,
+            Message = "user created successfully"
+        };
     }
 
     public TryLogInResponseModel TryLogIn(LogInRequestModel credentials)

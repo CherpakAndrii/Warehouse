@@ -7,7 +7,7 @@ public class SignInRequestModel
     [JsonPropertyName("login")]
     public string Login { get; set; }
     [JsonPropertyName("password")]
-    public string EncryptedPassword { get; set; }
+    public string Password { get; set; }
     [JsonPropertyName("name")]
     public string Name { get; set; }
     [JsonPropertyName("email")]

@@ -1,6 +1,5 @@
 ﻿using Models.Api.Common.Response;
 using Models.Api.Customer.Request;
-using Models.DBModels;
 
 namespace Infrastructure.Interfaces
 {

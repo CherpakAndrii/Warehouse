@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models.Api.Common.Request;
 using Models.Api.Common.Response;

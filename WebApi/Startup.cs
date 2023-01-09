@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 //using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using WebApi.Services;
+//using WebApi.Services;
 
 namespace WebApi
 {
@@ -49,7 +49,7 @@ namespace WebApi
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -69,10 +69,12 @@ namespace WebApi
             services.AddTransient<IWarehouseAdminService, WarehouseAdminService>();
             services.AddTransient<IWarehouseManagerService, WarehouseManagerService>();
             services.AddTransient<IWarehouseCustomersService, WarehouseCustomersService>();
+            services.AddTransient<IWarehouseAuthService, WarehouseAuthService>();
             services.AddTransient<IProductsRepository, ProductsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IOrdersRepository, OrdersRepository>();
-            services.AddSingleton<IAuthorizationHandler, Authentication>();
+            services.AddTransient<ISessionsRepository, SessionsRepository>();
+            //services.AddSingleton<IAuthorizationHandler, Authentication>();
             services.AddControllers();
 
             services.AddApplicationInsightsTelemetry();
@@ -94,13 +96,13 @@ namespace WebApi
                     options.AccessDeniedPath = new PathString("/auth/denied");
                 });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Authorize", policy =>
-                {
-                    policy.Requirements.Add(new AuthenticateRequirement(login, password, apiKey));
-                });
-            });
+            // services.AddAuthorization(options =>
+            // {
+            //     options.AddPolicy("Authorize", policy =>
+            //     {
+            //         policy.Requirements.Add(new AuthenticateRequirement(login, password, apiKey));
+            //     });
+            // });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
