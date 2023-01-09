@@ -18,7 +18,7 @@ namespace WebApi.Controllers
         }
         
         [HttpGet]
-        [Route("/myorders")]
+        [Route("/my-orders")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult GetOrderList(GetMyOrderListRequestModel getMyOrdersRequestModel)
         {
@@ -46,7 +46,7 @@ namespace WebApi.Controllers
         }
         
         [HttpPost]
-        [Route("/orders")]
+        [Route("/my-orders")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult CreateOrder(CreateMyOrderRequestModel createOrderRequest)
         {

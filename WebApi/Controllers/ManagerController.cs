@@ -18,7 +18,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("/update/product/quantity")]
+        [Route("/products/quantity")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult ChangeProductQuantity(UpdateProductQuantityRequestModel updateProductQuantityRequestModel)
         {
@@ -44,7 +44,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("/update/order/send")]
+        [Route("/orders")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult SendOrder(SendOrderRequestModel sendOrderRequest)
         {

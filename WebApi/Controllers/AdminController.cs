@@ -19,7 +19,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("/add/product")]
+        [Route("/products")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult AddProduct(AddProductRequestModel addProductRequestModel)
         {
@@ -46,7 +46,7 @@ namespace WebApi.Controllers
         }
         
         [HttpDelete]
-        [Route("/delete/product")]
+        [Route("/products")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult DeleteProduct(DeleteProductRequestModel deleteProductRequestModel)
         {
@@ -72,14 +72,14 @@ namespace WebApi.Controllers
         }
         
         [HttpPut]
-        [Route("/update/product/price")]
+        [Route("/product")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult UpdateProductPrice(UpdateProductPriceRequestModel updateProductPriceRequestModel)
         {
             try
             {
                 
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseAdminService.TryFindProduct(updateProductPriceRequestModel);
                 if (error != null)
@@ -98,8 +98,8 @@ namespace WebApi.Controllers
             }
         }
         
-        [HttpPost]
-        [Route("/update/order/reject")]
+        [HttpDelete]
+        [Route("/orders")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult RejectOrder(RejectOrderRequestModel rejectOrderRequest)
         {
