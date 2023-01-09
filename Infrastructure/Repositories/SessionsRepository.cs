@@ -14,6 +14,7 @@ namespace Infrastructure.Repositories
 
         public int CreateSessionAndGetSessionId(User user)
         {
+            CloseSessionForUser(user);
             Session createdSession = new Session() { User = user };
             _context.Sessions.Add(createdSession);
             _context.SaveChanges();

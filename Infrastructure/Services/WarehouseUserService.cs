@@ -71,6 +71,11 @@ namespace Infrastructure.Services
         {
             User requestUser = _sessionsRepository.GetUserBySessionId(request.SessionId);
             if (requestUser is null) return (new() { ErrorMessage = "401 Unauthorized" }, null);
+            if (request.Login != requestUser.Login)
+            {
+                _sessionsRepository.CloseSessionById(request.SessionId); // someone is trying to use another user`s session!  
+                return (new() { ErrorMessage = "409 Conflict" }, null);
+            }
             var r = requestUser.Role;
             if (r == UserRole.Admin && (int)neededRights % 2 == 0 ||
                 r == UserRole.Manager && (int)neededRights % 3 != 0 ||

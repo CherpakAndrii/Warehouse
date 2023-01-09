@@ -6,5 +6,7 @@ namespace Models.Api.Common.Request
     {
         [JsonPropertyName("sessionId")]
         public int SessionId { get; set; }
+        [JsonPropertyName("login")]
+        public string Login { get; set; }
     }
 }
