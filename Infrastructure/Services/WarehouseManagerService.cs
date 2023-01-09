@@ -10,28 +10,15 @@ public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerSe
 
     public WarehouseManagerService(IProductsRepository productsRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository) : base(productsRepository, ordersRepository, sessionsRepository) { }
 
-    public UpdateProductQuantitySuccessModel AddProductQuantity(IncreaseProductQuantityRequestModel product)
+    public UpdateProductQuantitySuccessModel ChangeProductQuantity(UpdateProductQuantityRequestModel product)
     {
-        var increasedQuantityProduct = _productsRepository.GetProduct(product.ProductId);
-        increasedQuantityProduct.Quantity += product.ProductQuantityToAdd;
-        _productsRepository.UpdateProduct(increasedQuantityProduct);
+        var changedQuantityProduct = _productsRepository.GetProduct(product.ProductId);
+        if (changedQuantityProduct.Quantity < product.ProductQuantityDifference) throw new ArgumentException("Impossible to remove more products than are available");
+        changedQuantityProduct.Quantity -= product.ProductQuantityDifference;
+        _productsRepository.UpdateProduct(changedQuantityProduct);
         return new()
         {
-            Product = increasedQuantityProduct
-            
-        };
-    }
-
-    // Sometimes something can happen to products (expiry, theft, fire damage). Therefore, the administrator should be able to reduce the number of products
-    public UpdateProductQuantitySuccessModel DecreaseProductQuantity(DecreaseProductQuantityRequestModel product)
-    {
-        var decreasedQuantityProduct = _productsRepository.GetProduct(product.ProductId);
-        if (decreasedQuantityProduct.Quantity < product.ProductQuantityToDecrease) throw new ArgumentException("Impossible to remove more products than are available");
-        decreasedQuantityProduct.Quantity -= product.ProductQuantityToDecrease;
-        _productsRepository.UpdateProduct(decreasedQuantityProduct);
-        return new()
-        {
-            Product = decreasedQuantityProduct
+            Product = changedQuantityProduct
         };
     }
 
