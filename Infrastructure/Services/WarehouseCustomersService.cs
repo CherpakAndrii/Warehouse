@@ -12,7 +12,7 @@ namespace Infrastructure.Services
         {
             _ordersRepository.CreateOrder(createRequest.Order);
             var addedOrder = _ordersRepository.GetOrder();
-            return new()
+            return new() 
             {
                 Order = addedOrder
             };

@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Models.Api.Common.Response;
+using Models.Api.ApiEntityModels;
 
 namespace Models.Api.Customer.Request
 {

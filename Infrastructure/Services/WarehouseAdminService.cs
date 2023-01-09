@@ -44,14 +44,7 @@ namespace Infrastructure.Services
         {
             _productsRepository.CreateProduct(product);
             var addedProduct = _productsRepository.GetProduct(product.Name);
-            return new()
-            {
-                ProductName = addedProduct.Name,
-                ProductId = addedProduct.ProductId,
-                ProductQuantity = addedProduct.Quantity,
-                ProductPrice = addedProduct.Price,
-                ProductCategory = addedProduct.Category
-            };
+            return new() { Product = addedProduct };
         }
 
         public UpdateProductPriceSuccessModel UpdateProductPrice(UpdateProductPriceRequestModel product)
@@ -59,28 +52,14 @@ namespace Infrastructure.Services
             var updatedProduct = _productsRepository.GetProduct(product.ProductId);
             updatedProduct.Price = product.NewProductPrice;
             _productsRepository.UpdateProduct(updatedProduct);
-            return new()
-            {
-                ProductName = updatedProduct.Name,
-                ProductId = updatedProduct.ProductId,
-                ProductQuantity = updatedProduct.Quantity,
-                ProductPrice = updatedProduct.Price,
-                ProductCategory = updatedProduct.Category
-            };
+            return new() { Product = updatedProduct };
         }
 
         public DeleteProductSuccessModel DeleteProduct(ActionWithExistingProductRequestModel product)
         {
             var deletedProduct = _productsRepository.GetProduct(product.ProductId);
             _productsRepository.DeleteProduct(deletedProduct);
-            return new()
-            {
-                ProductName = deletedProduct.Name,
-                ProductId = deletedProduct.ProductId,
-                ProductQuantity = deletedProduct.Quantity,
-                ProductPrice = deletedProduct.Price,
-                ProductCategory = deletedProduct.Category
-            };
+            return new() { Product = deletedProduct };
         }
         
         public RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest)

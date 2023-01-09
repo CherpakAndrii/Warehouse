@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Interfaces;
+using Models.Api.ApiEntityModels;
 using Models.Api.Common.Response;
 using Models.Api.Common.Request;
 using Models.DBModels;

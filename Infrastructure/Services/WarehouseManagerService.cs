@@ -17,11 +17,8 @@ public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerSe
         _productsRepository.UpdateProduct(increasedQuantityProduct);
         return new()
         {
-            ProductName = increasedQuantityProduct.Name,
-            ProductId = increasedQuantityProduct.ProductId,
-            ProductQuantity = increasedQuantityProduct.Quantity, 
-            ProductPrice = increasedQuantityProduct.Price,
-            ProductCategory = increasedQuantityProduct.Category
+            Product = increasedQuantityProduct
+            
         };
     }
 
@@ -34,11 +31,7 @@ public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerSe
         _productsRepository.UpdateProduct(decreasedQuantityProduct);
         return new()
         {
-            ProductName = decreasedQuantityProduct.Name,
-            ProductId = decreasedQuantityProduct.ProductId,
-            ProductQuantity = decreasedQuantityProduct.Quantity,
-            ProductPrice = decreasedQuantityProduct.Price,
-            ProductCategory = decreasedQuantityProduct.Category
+            Product = decreasedQuantityProduct
         };
     }
 
