@@ -46,7 +46,7 @@ namespace WebApi.Controllers
             }
         }
         
-        [HttpPost]
+        [HttpDelete]
         [Route("/delete/product")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult DeleteProduct(DeleteProductRequestModel deleteProductRequestModel)
@@ -72,7 +72,7 @@ namespace WebApi.Controllers
             }
         }
         
-        [HttpPost]
+        [HttpPut]
         [Route("/update/product/price")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult UpdateProductPrice(UpdateProductPriceRequestModel updateProductPriceRequestModel)

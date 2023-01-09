@@ -18,7 +18,7 @@ namespace WebApi.Controllers
             _warehouseCustomersService = warehouseCustomersService;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("/products")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult GetProductList(GetProductListRequestModel getProductsRequestModel)
