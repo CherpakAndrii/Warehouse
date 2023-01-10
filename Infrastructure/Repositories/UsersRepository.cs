@@ -1,9 +1,11 @@
-﻿using Infrastructure.Interfaces;
+﻿using System.Reflection;
+using Infrastructure.Interfaces;
 using Infrastructure.Services;
 using Models.DBModels;
 
 namespace Infrastructure.Repositories
 {
+    [Obfuscation]
     public class UsersRepository : IUsersRepository
     {
         private readonly AppDbContext _context;

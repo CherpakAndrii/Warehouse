@@ -1,4 +1,5 @@
-﻿using Infrastructure.Interfaces;
+﻿using System.Reflection;
+using Infrastructure.Interfaces;
 using Models.Api.ApiEntityModels;
 using Models.Api.Req_Res.Admin.Request;
 using Models.Api.Req_Res.Admin.Response;
@@ -9,6 +10,7 @@ using Models.DBModels.Enums;
 
 namespace Infrastructure.Services
 {
+    [Obfuscation]
     public class WarehouseAdminService : IWarehouseAdminService
     {
         private readonly IUsersRepository _usersRepository;

@@ -10,11 +10,11 @@ namespace WebApi.Controllers
     [ApiController]
     public abstract class CommonController : ControllerBase
     {
-        protected readonly IWarehouseUserService WarehouseCustomersService;
+        private readonly IWarehouseUserService _warehouseUserService;
 
-        protected CommonController(IWarehouseUserService warehouseCustomersService)
+        protected CommonController(IWarehouseUserService warehouseUserService)
         {
-            WarehouseCustomersService = warehouseCustomersService;
+            _warehouseUserService = warehouseUserService;
         }
 
         [HttpGet]
@@ -24,9 +24,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(getProductsRequestModel, AccessRights.Any);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(getProductsRequestModel, AccessRights.Any);
                 if (error is not null) return BadRequest(error);
-                GetProductListSuccessModel response = WarehouseCustomersService.GetProductsByCategory(getProductsRequestModel);
+                GetProductListSuccessModel response = _warehouseUserService.GetProductsByCategory(getProductsRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);
@@ -39,6 +39,7 @@ namespace WebApi.Controllers
                 };
             }
         }
+        
         
     }
 }

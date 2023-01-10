@@ -12,7 +12,8 @@ namespace Infrastructure.Interfaces
         GetProductListSuccessModel GetProductsByCategory(GetProductListRequestModel productListRequest);
         GetOrderListSuccessModel GetOrderList(GetOrderListRequestModel orderListRequest);
         (ErrorResponseModel, User) CheckRequest(CommonUserRequestModel request, AccessRights neededRights);
-        string GetMyProfileDetails();
-        string UpdateMyProfile();
+        (ErrorResponseModel, User) AdvancedCheckRequest(AdditionalSecurityRequestModel request, AccessRights neededRights);
+        GetMyProfileResponseModel GetMyProfileDetails(GetMyProfileRequestModel getMyProfileRequest);
+        UpdateMyProfileResponseModel UpdateMyProfile(UpdateMyProfileRequestModel updateProfileRequest);
     }
 }

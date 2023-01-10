@@ -8,16 +8,19 @@ public class UserModel
 {
     [JsonPropertyName("userId")]
     public int UserId { get; set; }
+    
     [JsonPropertyName("login")]
     public string Login { get; set; }
-    [JsonPropertyName("password")]
-    public string EncryptedPassword { get; set; }
+    
     [JsonPropertyName("name")]
     public string Name { get; set; }
+    
     [JsonPropertyName("email")]
     public string Email { get; set; }
+    
     [JsonPropertyName("phone")]
     public string Phone { get; set; }
+    
     [JsonPropertyName("role")]
     public UserRole Role { get; set; }
         
@@ -25,7 +28,6 @@ public class UserModel
     {
         UserId = user.UserId.Value;
         Login = user.Login;
-        EncryptedPassword = user.EncryptedPassword;
         Name = user.Name;
         Email = user.Email;
         Phone = user.Phone;
@@ -37,7 +39,7 @@ public class UserModel
     {
         UserId = um.UserId,
         Login = um.Login,
-        EncryptedPassword = um.EncryptedPassword,
+        // EncryptedPassword = um.EncryptedPassword,
         Name = um.Name,
         Email = um.Email,
         Phone = um.Phone,

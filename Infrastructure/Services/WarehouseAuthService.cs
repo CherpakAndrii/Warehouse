@@ -1,4 +1,5 @@
-﻿using Infrastructure.Interfaces;
+﻿using System.Reflection;
+using Infrastructure.Interfaces;
 using Models.Api.Req_Res.Common.Request;
 using Models.Api.Req_Res.Common.Response;
 using Models.DBModels;
@@ -6,6 +7,7 @@ using Models.DBModels.Enums;
 
 namespace Infrastructure.Services;
 
+[Obfuscation]
 public class WarehouseAuthService : IWarehouseAuthService
 {
     private readonly IUsersRepository _usersRepository;

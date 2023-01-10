@@ -39,4 +39,19 @@ public class PasswordDecryptor
 
         return encryptedPassword;
     }
+
+    public string ReencryptPasswordOnLoginUpdate(string oldUserLogin, string newUserLogin, string oldEncryptedPassword)
+    {
+        char[] pass1 = oldUserLogin.ToCharArray();
+        char[] pass2 = InternalPassword.ToString().ToCharArray();
+        string oldPass = "";
+        
+        for (int i = 0, m = 1; i < oldEncryptedPassword.Length; i++, m *= -1)
+        {
+            char c = (char)(byte)(oldEncryptedPassword[i] + m * (pass1[i % pass1.Length] - pass2[i % pass2.Length]));
+            oldPass += c;
+        }
+
+        return EncryptPassword(newUserLogin, oldPass);
+    }
 }
