@@ -1,7 +1,9 @@
 ﻿using Infrastructure.Interfaces;
 using Models.Api.Common.Response;
 using Models.Api.Admin.Request;
+using Models.Api.Admin.Response;
 using Models.Api.Admin.Response.Success;
+using Models.Api.ApiEntityModels;
 using Models.Api.Common.Request;
 using Models.DBModels;
 using Models.DBModels.Enums;
@@ -10,7 +12,14 @@ namespace Infrastructure.Services
 {
     public class WarehouseAdminService : WarehouseUserService, IWarehouseAdminService
     {
-        public WarehouseAdminService(IProductsRepository productsRepository, IUsersRepository usersRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository) : base(productsRepository, ordersRepository, sessionsRepository) { }
+        private readonly IUsersRepository _usersRepository;
+
+        public WarehouseAdminService(IProductsRepository productsRepository, IUsersRepository usersRepository,
+            IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository) : base(productsRepository,
+            ordersRepository, sessionsRepository)
+        {
+            _usersRepository = usersRepository;
+        }
 
         public ErrorResponseModel ValidateProductModel(AddProductRequestModel addProductRequestModel)
         {
@@ -67,14 +76,59 @@ namespace Infrastructure.Services
             };
         }
 
-        public string GetCustomersList()
+        public GetUserListSuccessModel GetUserList(GetUserListRequestModel getUserListRequest)
         {
-            throw new NotImplementedException();
+            var users = _usersRepository.GetAllUsers();
+            List<UserModel> userModels = new List<UserModel>();
+            foreach (var user in users)
+            {
+                userModels.Add(user);
+            }
+            return new()
+            {
+                UserList = userModels
+            };
         }
 
-        public string AddWorker()
+        public AddWorkerResponseModel AddWorker(AddWorkerRequestModel addWorkerRequest)
         {
-            throw new NotImplementedException();
+            if (_usersRepository.GetUserByLogin(addWorkerRequest.Login) is not null)
+                return new AddWorkerResponseModel()
+                {
+                    Success = false,
+                    Message = "login is already in use"
+                };
+            PasswordDecryptor decryptor = new PasswordDecryptor();
+            string encryptedPassword = decryptor.EncryptPassword(addWorkerRequest.Login, addWorkerRequest.Password);
+            _usersRepository.CreateUser(new User()
+            {
+                Login = addWorkerRequest.Login,
+                Name = addWorkerRequest.Name,
+                Email = addWorkerRequest.Email,
+                EncryptedPassword = encryptedPassword,
+                Phone = addWorkerRequest.Phone,
+                Role = addWorkerRequest.Role
+            });
+            User createdUser = _usersRepository.GetUserByLogin(addWorkerRequest.Login);
+            return new AddWorkerResponseModel()
+            {
+                CreatedUser = createdUser,
+                Success = true,
+                Message = $"new {createdUser.Role.ToString()} created successfully"
+            };
+        }
+        
+        public RemoveUserResponseModel RemoveWorker(RemoveWorkerRequestModel removeWorkerRequest)
+        {
+            var deletedUser = _usersRepository.GetUser(removeWorkerRequest.UserId);
+            if (deletedUser == null)
+                return new() { Success = false, Message = "such user is not found" };
+            _usersRepository.DeleteUser(deletedUser);
+            return new()
+            {
+                Success = true, RemovedUser = deletedUser,
+                Message = $"{deletedUser.Role.ToString()} deleted successfully"
+            };
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Models.Api.Admin.Request;
+using Models.Api.Admin.Response;
 using Models.Api.Admin.Response.Success;
 using Models.Api.Common.Request;
 using Models.Api.Common.Response;
@@ -16,7 +17,8 @@ namespace Infrastructure.Interfaces
         RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest);
 
 
-        string GetCustomersList();
-        string AddWorker();
+        GetUserListSuccessModel GetUserList(GetUserListRequestModel getUserListRequest);
+        AddWorkerResponseModel AddWorker(AddWorkerRequestModel addWorkerRequest);
+        public RemoveUserResponseModel RemoveWorker(RemoveWorkerRequestModel removeWorkerRequest);
     }
 }
