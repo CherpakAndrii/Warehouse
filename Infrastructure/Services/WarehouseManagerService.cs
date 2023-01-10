@@ -10,11 +10,12 @@ public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerSe
 
     public WarehouseManagerService(IProductsRepository productsRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository) : base(productsRepository, ordersRepository, sessionsRepository) { }
 
-    public UpdateProductQuantitySuccessModel ChangeProductQuantity(UpdateProductQuantityRequestModel product)
+    public UpdateProductQuantitySuccessModel ChangeProductQuantity(UpdateProductQuantityRequestModel productChanges)
     {
-        var changedQuantityProduct = _productsRepository.GetProduct(product.ProductId);
-        if (changedQuantityProduct.Quantity < product.ProductQuantityDifference) throw new ArgumentException("Impossible to remove more products than are available");
-        changedQuantityProduct.Quantity -= product.ProductQuantityDifference;
+        var changedQuantityProduct = _productsRepository.GetProduct(productChanges.ProductId);
+        if (changedQuantityProduct.AvailableAmount < productChanges.ProductQuantityDifference) throw new ArgumentException("Impossible to remove more products than are available");
+        changedQuantityProduct.Quantity -= productChanges.ProductQuantityDifference;
+        changedQuantityProduct.AvailableAmount -= (int)productChanges.ProductQuantityDifference;
         _productsRepository.UpdateProduct(changedQuantityProduct);
         return new()
         {
@@ -25,18 +26,19 @@ public class WarehouseManagerService : WarehouseUserService, IWarehouseManagerSe
     public SendOrderSuccessModel SendOrder(SendOrderRequestModel orderRequest)
     {
         var sentOrder = _ordersRepository.GetOrder(orderRequest.OrderId);
-        if (sentOrder.Status == OrderStatus.Sent) throw new ArgumentException("This order is already sent");
-        if (sentOrder.Status == OrderStatus.Rejected) throw new ArgumentException("This order is rejected");
+        if (sentOrder.Status == OrderStatus.Sent) return new() { Success = false, Order = sentOrder, Message =  "This order is already sent"};
+        if (sentOrder.Status == OrderStatus.Rejected) return new() { Success = false, Order = sentOrder, Message =  "This order is rejected"};
+        var orderedProduct = sentOrder.Product;
+        if (sentOrder.Quantity > orderedProduct.Quantity) return new() { Success = false, Order = sentOrder, Message =  "Not enough products"};
         sentOrder.Status = OrderStatus.Sent;
+        orderedProduct.Quantity -= sentOrder.Quantity;
         _ordersRepository.UpdateOrder(sentOrder);
+        _productsRepository.UpdateProduct(orderedProduct);
         return new()
         {
-            Order = sentOrder
+            Success = true,
+            Order = sentOrder,
+            Message = "Successfully sent"
         };
-    }
-
-    public string GetAllOrders()
-    {
-        throw new NotImplementedException();
     }
 }

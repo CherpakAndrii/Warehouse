@@ -13,7 +13,7 @@ public class OrderModel
     [JsonPropertyName("product")]
     public ProductModel Product { get; set; }
     [JsonPropertyName("quantity")]
-    public int Quantity { get; set; }
+    public uint Quantity { get; set; }
     [JsonPropertyName("price")]
     public double OrderPrice { get; set; }
     [JsonPropertyName("user")]

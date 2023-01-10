@@ -14,6 +14,8 @@ public class ProductModel
 
     [JsonPropertyName("productQuantity")]
     public uint Quantity { get; set; }
+    [JsonPropertyName("available")]
+    public int AvailableAmount { get; set; }
         
     [JsonPropertyName("productPrice")]
     public float Price { get; set; }
@@ -27,6 +29,7 @@ public class ProductModel
         Quantity = prod.Quantity;
         Price = prod.Price;
         Category = prod.Category;
+        AvailableAmount = prod.AvailableAmount;
     }
         
     public static implicit operator ProductModel(Product p) => new (p);
@@ -36,6 +39,7 @@ public class ProductModel
         Name = pm.Name,
         Quantity = pm.Quantity,
         Price = pm.Price,
-        Category = pm.Category
+        Category = pm.Category,
+        AvailableAmount = pm.AvailableAmount
     };
 }

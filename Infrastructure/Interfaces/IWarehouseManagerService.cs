@@ -7,6 +7,4 @@ public interface IWarehouseManagerService : IWarehouseUserService
 {
     UpdateProductQuantitySuccessModel ChangeProductQuantity(UpdateProductQuantityRequestModel product);
     SendOrderSuccessModel SendOrder(SendOrderRequestModel sendOrderRequest);
-
-    string GetAllOrders();
 }

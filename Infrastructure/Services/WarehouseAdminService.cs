@@ -21,27 +21,14 @@ namespace Infrastructure.Services
                 return new() { ErrorMessage = "no product name specified" };
             if (_productsRepository.GetProduct(addProductRequestModel.ProductName) is not null)
                 return new() { ErrorMessage = "product with given name already exists" };
-
-            if (addProductRequestModel.ProductId is not null && _productsRepository.GetProduct((int)addProductRequestModel.ProductId) is not null) 
-                return new() { ErrorMessage = "product id already exists" };
-            
             if (addProductRequestModel.ProductPrice < 0.01) return new() { ErrorMessage = "price can't be less than 0" };
             
             return null;
         }
 
-        public Product ConvertToProduct(AddProductRequestModel product)
+        public AddProductSuccessModel AddProduct(AddProductRequestModel addProductRequest)
         {
-            return new()
-            {
-                Name = product.ProductName,
-                ProductId = product.ProductId,
-                Quantity = product.ProductQuantity
-            };
-        }
-
-        public AddProductSuccessModel AddProduct(Product product)
-        {
+            Product product = addProductRequest.ConvertToProduct();
             _productsRepository.CreateProduct(product);
             var addedProduct = _productsRepository.GetProduct(product.Name);
             return new() { Product = addedProduct };
@@ -65,27 +52,27 @@ namespace Infrastructure.Services
         public RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest)
         {
             var rejectedOrder = _ordersRepository.GetOrder(orderRequest.OrderId);
-            if (rejectedOrder.Status == OrderStatus.Rejected) throw new ArgumentException("This order is already rejected");
-            if (rejectedOrder.Status == OrderStatus.Sent) throw new ArgumentException("This order is already sent, can't reject it");
+            if (rejectedOrder.Status == OrderStatus.Rejected) return new RejectOrderSuccessModel(){ Order = rejectedOrder, Success = false, Message = "This order is already rejected"};
+            if (rejectedOrder.Status == OrderStatus.Sent) return new RejectOrderSuccessModel(){ Order = rejectedOrder, Success = false, Message = "This order is already sent, can't reject it"};
+            var orderedProduct = rejectedOrder.Product;
             rejectedOrder.Status = OrderStatus.Rejected;
+            orderedProduct.AvailableAmount += (int)rejectedOrder.Quantity;
             _ordersRepository.UpdateOrder(rejectedOrder);
+            _productsRepository.UpdateProduct(orderedProduct);
             return new()
             {
-                Order = rejectedOrder
+                Order = rejectedOrder,
+                Success = true,
+                Message = "Successfully rejected"
             };
         }
 
-        public string GetAllCustomers()
+        public string GetCustomersList()
         {
             throw new NotImplementedException();
         }
 
-        public string GetAllOrders()
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetInternalInfo()
+        public string AddWorker()
         {
             throw new NotImplementedException();
         }

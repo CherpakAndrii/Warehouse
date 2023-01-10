@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories
 
         public Product GetProduct(string name)
         {
-            return _context.Products.Where(c => c.Name == name).FirstOrDefault();
+            return _context.Products.Where(c => c.Name == name).LastOrDefault();
         }
 
         public IEnumerable<Product> GetProductList(ProductCategory? category)

@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Models.Api.Common.Response;
 using Models.Api.Admin.Request;
 using Models.Api.Admin.Response.Success;
-using Models.DBModels;
+using Models.Api.ApiEntityModels;
+using Models.Api.Common.Request;
 using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
@@ -12,7 +13,7 @@ namespace WebApi.Controllers
     [ApiController]
     public class AdminController : WareHouseWorkerController
     {
-        protected IWarehouseAdminService _warehouseAdminService;
+        private readonly IWarehouseAdminService _warehouseAdminService;
         public AdminController(IWarehouseAdminService warehouseAdminService, IWarehouseCustomersService warehouseCustomersService) : base(warehouseCustomersService)
         {
             _warehouseAdminService = warehouseAdminService;
@@ -25,13 +26,12 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(addProductRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(addProductRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
-                var product = addProductRequestModel.ConvertToProduct();
                 error = _warehouseAdminService.ValidateProductModel(addProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
-                AddProductSuccessModel response = _warehouseAdminService.AddProduct(product);
+                AddProductSuccessModel response = _warehouseAdminService.AddProduct(addProductRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);
@@ -52,15 +52,29 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseAdminService.TryFindProduct(deleteProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
-                DeleteProductSuccessModel response = _warehouseAdminService.DeleteProduct(deleteProductRequestModel);
-                if (response == null)
+                List<OrderModel> relatedOrders = _warehouseCustomersService.GetOrderList(new() { ProductId = deleteProductRequestModel.ProductId }).OrderList;
+                int rejectedOrderCtr = 0;
+                foreach (var order in relatedOrders)
+                {
+                    if (_warehouseAdminService.RejectOrder(new RejectOrderRequestModel(){OrderId = order.OrderId}).Success) rejectedOrderCtr++;
+                }
+                
+                DeleteProductSuccessModel delResponse = _warehouseAdminService.DeleteProduct(deleteProductRequestModel);
+                if (delResponse == null)
                     return StatusCode(500);
-                return Ok(response);
+                
+                DeleteProductSuccessModel rejResponse = new DeleteProductSuccessModel()
+                {
+                    OrdersRejected = rejectedOrderCtr,
+                    Product = delResponse.Product
+                };
+                
+                return Ok(rejResponse);
             }
             catch (Exception ex)
             {
@@ -105,7 +119,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
+                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseAdminService.TryFindOrder(rejectOrderRequest);
                 if (error != null)

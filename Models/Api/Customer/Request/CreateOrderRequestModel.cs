@@ -8,7 +8,7 @@ namespace Models.Api.Customer.Request
     {
         public ProductModel Product { get; set; }
         [JsonPropertyName("quantity")]
-        public int Quantity { get; set; }
+        public uint Quantity { get; set; }
         [JsonPropertyName("user")]
         public User User { get; set; }
     }

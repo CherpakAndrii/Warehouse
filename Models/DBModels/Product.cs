@@ -12,6 +12,7 @@ namespace Models.DBModels
         public string Name { get; set; }
         public float Price { get; set; }
         public uint Quantity { get; set; }
+        public int AvailableAmount { get; set; }
         public ProductCategory Category { get; set; }
     }
 }

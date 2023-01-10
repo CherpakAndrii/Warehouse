@@ -10,7 +10,7 @@ namespace Models.DBModels
         public int OrderId { get; set; }
         public OrderStatus Status { get; set; }
         public Product Product { get; set; }
-        public int Quantity { get; set; }
+        public uint Quantity { get; set; }
         public double OrderPrice { get; set; }
         public User User { get; set; }
     }

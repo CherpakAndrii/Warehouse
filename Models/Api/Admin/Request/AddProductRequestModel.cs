@@ -9,14 +9,14 @@ namespace Models.Api.Admin.Request
 
         [JsonPropertyName("productName")]
         public string ProductName { get; set; }
-
-        [JsonPropertyName("productId")]
-        public int? ProductId { get; set; }
+        
         [JsonPropertyName("productPrice")]
         public float ProductPrice { get; set; }
 
         [JsonPropertyName("productQuantity")]
         public uint ProductQuantity { get; set; }
+        [JsonPropertyName("availableAmount")]
+        public int AvailableAmount { get; set; }
         
         [JsonPropertyName("category")]
         public ProductCategory ProductCategory { get; set; }
@@ -25,10 +25,10 @@ namespace Models.Api.Admin.Request
         public Product ConvertToProduct()
             => new()
             {
-                ProductId = ProductId,
                 Name = ProductName,
                 Price = ProductPrice,
                 Quantity = ProductQuantity,
+                AvailableAmount = AvailableAmount,
                 Category = ProductCategory
             };
     }

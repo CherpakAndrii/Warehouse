@@ -10,15 +10,13 @@ namespace Infrastructure.Interfaces
     {
         ErrorResponseModel ValidateProductModel(AddProductRequestModel product);
 
-        Product ConvertToProduct(AddProductRequestModel product);
-        AddProductSuccessModel AddProduct(Product product);
+        AddProductSuccessModel AddProduct(AddProductRequestModel product);
         UpdateProductPriceSuccessModel UpdateProductPrice(UpdateProductPriceRequestModel productRequest);
         DeleteProductSuccessModel DeleteProduct(ActionWithExistingProductRequestModel productRequest);
         RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest);
 
 
-        string GetAllCustomers();
-        string GetAllOrders();
-        string GetInternalInfo();
+        string GetCustomersList();
+        string AddWorker();
     }
 }

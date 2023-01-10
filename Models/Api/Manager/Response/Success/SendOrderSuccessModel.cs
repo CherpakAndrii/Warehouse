@@ -5,9 +5,9 @@ namespace Models.Api.Manager.Response.Success
 {
     public class SendOrderSuccessModel : ActionWithOrderSuccessModel
     {
-        [JsonPropertyName("orderId")]
-        public int? OrderId { get; set; }
-        [JsonPropertyName("customerName")]
-        public string CustomerName { get; set; }
+        [JsonPropertyName("success")]
+        public bool Success { get; set; }
+        [JsonPropertyName("message")]
+        public string Message { get; set; }
     }
 }

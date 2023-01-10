@@ -3,7 +3,7 @@ using Models.Api.ApiEntityModels;
 
 namespace Models.Api.Common.Response
 {
-    public class ActionWithOrderSuccessModel
+    public abstract class ActionWithOrderSuccessModel
     {
         [JsonPropertyName("order")]
         public OrderModel Order { get; set; }
