@@ -8,7 +8,7 @@ namespace WebApi.Controllers
 {
     [Route("api")]
     [ApiController]
-    public abstract class WareHouseWorkerController : ControllerBase
+    public class WareHouseWorkerController : ControllerBase
     {
         private readonly IWarehouseUserService _warehouseUserService;
 
@@ -19,7 +19,6 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("/orders")]
-        //[Authorize(Policy = "Authorize")]
         public IActionResult GetOrderList(GetOrderListRequestModel getOrdersRequestModel)
         {
             try
