@@ -40,6 +40,50 @@ namespace WebApi.Controllers
             }
         }
         
+        [HttpGet]
+        [Route("/my-profile")]
+        //[Authorize(Policy = "Authorize")]
+        public IActionResult GetMyProfile(GetMyProfileRequestModel getMyProfileRequest)
+        {
+            try
+            {
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(getMyProfileRequest, AccessRights.Any);
+                if (error is not null) return BadRequest(error);
+                GetMyProfileResponseModel response = _warehouseUserService.GetMyProfileDetails(getMyProfileRequest);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
         
+        [HttpPut]
+        [Route("/my-profile")]
+        //[Authorize(Policy = "Authorize")]
+        public IActionResult UpdateMyProfile(UpdateMyProfileRequestModel updateMyProfileRequest)
+        {
+            try
+            {
+                (ErrorResponseModel error, _) = _warehouseUserService.AdvancedCheckRequest(updateMyProfileRequest, AccessRights.Any);
+                if (error is not null) return BadRequest(error);
+                UpdateMyProfileResponseModel response = _warehouseUserService.UpdateMyProfile(updateMyProfileRequest);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
     }
 }

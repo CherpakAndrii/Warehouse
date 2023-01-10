@@ -81,7 +81,7 @@ namespace Infrastructure.Services
             };
         }
 
-        public GetUserListSuccessModel GetUserList(GetUserListRequestModel getUserListRequest)
+        public GetUserListResponseModel GetUserList(GetUserListRequestModel getUserListRequest)
         {
             var users = _usersRepository.GetAllUsers();
             List<UserModel> userModels = new List<UserModel>();
@@ -97,24 +97,24 @@ namespace Infrastructure.Services
 
         public AddWorkerResponseModel AddWorker(AddWorkerRequestModel addWorkerRequest)
         {
-            if (_usersRepository.GetUserByLogin(addWorkerRequest.Login) is not null)
+            if (_usersRepository.GetUserByLogin(addWorkerRequest.NewUserLogin) is not null)
                 return new AddWorkerResponseModel()
                 {
                     Success = false,
                     Message = "login is already in use"
                 };
             PasswordDecryptor decryptor = new PasswordDecryptor();
-            string encryptedPassword = decryptor.EncryptPassword(addWorkerRequest.Login, addWorkerRequest.Password);
+            string encryptedPassword = decryptor.EncryptPassword(addWorkerRequest.NewUserLogin, addWorkerRequest.NewUserPassword);
             _usersRepository.CreateUser(new User()
             {
-                Login = addWorkerRequest.Login,
+                Login = addWorkerRequest.NewUserLogin,
                 Name = addWorkerRequest.Name,
                 Email = addWorkerRequest.Email,
                 EncryptedPassword = encryptedPassword,
                 Phone = addWorkerRequest.Phone,
                 Role = addWorkerRequest.Role
             });
-            User createdUser = _usersRepository.GetUserByLogin(addWorkerRequest.Login);
+            User createdUser = _usersRepository.GetUserByLogin(addWorkerRequest.NewUserLogin);
             return new AddWorkerResponseModel()
             {
                 CreatedUser = createdUser,

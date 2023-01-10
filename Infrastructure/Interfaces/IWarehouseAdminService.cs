@@ -16,7 +16,7 @@ namespace Infrastructure.Interfaces
         RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest);
 
 
-        GetUserListSuccessModel GetUserList(GetUserListRequestModel getUserListRequest);
+        GetUserListResponseModel GetUserList(GetUserListRequestModel getUserListRequest);
         AddWorkerResponseModel AddWorker(AddWorkerRequestModel addWorkerRequest);
         public RemoveUserResponseModel RemoveWorker(RemoveWorkerRequestModel removeWorkerRequest);
     }

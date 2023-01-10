@@ -138,5 +138,71 @@ namespace WebApi.Controllers
                 };
             }
         }
+        
+        [HttpGet]
+        [Route("/users")]
+        public IActionResult GetUsersList(GetUserListRequestModel getUserListRequest)
+        {
+            try
+            {
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(getUserListRequest, AccessRights.Admin);
+                if (error is not null) return BadRequest(error);
+                GetUserListResponseModel response = _warehouseAdminService.GetUserList(getUserListRequest);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+        
+        [HttpPost]
+        [Route("/users")]
+        public IActionResult CreateNewWorkerAcc(AddWorkerRequestModel addWorkerRequest)
+        {
+            try
+            {
+                (ErrorResponseModel error, _) = _warehouseUserService.AdvancedCheckRequest(addWorkerRequest, AccessRights.Admin);
+                if (error is not null) return BadRequest(error);
+                AddWorkerResponseModel response = _warehouseAdminService.AddWorker(addWorkerRequest);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+        
+        [HttpDelete]
+        [Route("/users")]
+        public IActionResult DeleteUserAcc(RemoveWorkerRequestModel removeWorkerRequest)
+        {
+            try
+            {
+                (ErrorResponseModel error, _) = _warehouseUserService.AdvancedCheckRequest(removeWorkerRequest, AccessRights.Admin);
+                if (error is not null) return BadRequest(error);
+                RemoveUserResponseModel response = _warehouseAdminService.RemoveWorker(removeWorkerRequest);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
     }
 }
