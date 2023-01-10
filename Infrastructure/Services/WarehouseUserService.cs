@@ -83,5 +83,15 @@ namespace Infrastructure.Services
                 return (null, requestUser);
             return (new() { ErrorMessage = "403 Forbidden" }, null);
         }
+
+        public string GetMyProfileDetails()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string UpdateMyProfile()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
