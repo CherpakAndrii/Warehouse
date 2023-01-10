@@ -1,6 +1,5 @@
-﻿using Models.Api.Common.Response;
-using Models.Api.Customer.Request;
-using Models.Api.Customer.Response;
+﻿using Models.Api.Req_Res.Customer.Request;
+using Models.Api.Req_Res.Customer.Response;
 
 namespace Infrastructure.Interfaces
 {

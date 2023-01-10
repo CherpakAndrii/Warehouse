@@ -1,9 +1,9 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api.Common.Request;
-using Models.Api.Common.Response;
-using Models.Api.Customer.Request;
-using Models.Api.Customer.Response;
+using Models.Api.Req_Res.Common.Request;
+using Models.Api.Req_Res.Common.Response;
+using Models.Api.Req_Res.Customer.Request;
+using Models.Api.Req_Res.Customer.Response;
 using Models.DBModels;
 using Models.DBModels.Enums;
 
@@ -25,14 +25,14 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(getMyOrdersRequestModel, AccessRights.Customer);
+                (ErrorResponseModel error, User user) = WarehouseCustomersService.CheckRequest(getMyOrdersRequestModel, AccessRights.Customer);
                 if (error is not null) return BadRequest(error);
                 GetOrderListRequestModel getOrdersRequestModel = new()
                 {
                     SessionId = getMyOrdersRequestModel.SessionId,
                     UserId = user.UserId
                 };
-                GetOrderListSuccessModel response = _warehouseCustomersService.GetOrderList(getOrdersRequestModel);
+                GetOrderListSuccessModel response = WarehouseCustomersService.GetOrderList(getOrdersRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);
@@ -53,7 +53,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(createOrderRequest, AccessRights.Customer);
+                (ErrorResponseModel error, User user) = WarehouseCustomersService.CheckRequest(createOrderRequest, AccessRights.Customer);
                 if (error is not null) return BadRequest(error);
                 CreateOrderRequestModel request = new()
                 {
@@ -62,7 +62,7 @@ namespace WebApi.Controllers
                     Quantity = createOrderRequest.Quantity,
                     User = user
                 };
-                CreateOrderResponseModel response = _warehouseCustomersService.MakeOrder(request);
+                CreateOrderResponseModel response = WarehouseCustomersService.MakeOrder(request);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);
@@ -82,7 +82,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(removeOrderRequest, AccessRights.Customer);
+                (ErrorResponseModel error, User user) = WarehouseCustomersService.CheckRequest(removeOrderRequest, AccessRights.Customer);
                 if (error is not null) return BadRequest(error);
                 RemoveOrderRequestModel request = new()
                 {
@@ -91,7 +91,7 @@ namespace WebApi.Controllers
                     OrderId = removeOrderRequest.OrderId,
                     UserId = user.UserId.Value
                 };
-                RemoveOrderResponseModel response = _warehouseCustomersService.RemoveOrder(request);
+                RemoveOrderResponseModel response = WarehouseCustomersService.RemoveOrder(request);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);

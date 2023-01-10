@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api.Common.Response;
-using Models.Api.Common.Request;
+using Models.Api.Req_Res.Common.Request;
+using Models.Api.Req_Res.Common.Response;
 using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
@@ -19,9 +19,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(getOrdersRequestModel, AccessRights.Worker);
+                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(getOrdersRequestModel, AccessRights.Worker);
                 if (error is not null) return BadRequest(error);
-                GetOrderListSuccessModel response = _warehouseCustomersService.GetOrderList(getOrdersRequestModel);
+                GetOrderListSuccessModel response = WarehouseCustomersService.GetOrderList(getOrdersRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);

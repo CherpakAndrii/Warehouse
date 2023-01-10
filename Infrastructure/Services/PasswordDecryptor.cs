@@ -6,13 +6,13 @@ namespace Infrastructure.Services;
 [Obfuscation]
 public class PasswordDecryptor
 {
-    private const long INTERNAL_PASSWORD = 5612389589465625739;
+    private const long InternalPassword = 5612389589465625739;
 
     public bool CheckPassword(User user, string password)
     {
         char[] encryptedPassword = user.EncryptedPassword.ToCharArray();
         char[] pass1 = user.Login.ToCharArray();
-        char[] pass2 = INTERNAL_PASSWORD.ToString().ToCharArray();
+        char[] pass2 = InternalPassword.ToString().ToCharArray();
         string decryptedPassword = "";
 
         for (int i = 0, m = 1; i < encryptedPassword.Length; i++, m *= -1)
@@ -28,7 +28,7 @@ public class PasswordDecryptor
     {
         char[] userPassword = password.ToCharArray();
         char[] pass1 = userLogin.ToCharArray();
-        char[] pass2 = INTERNAL_PASSWORD.ToString().ToCharArray();
+        char[] pass2 = InternalPassword.ToString().ToCharArray();
         string encryptedPassword = "";
 
         for (int i = 0, m = -1; i < userPassword.Length; i++, m *= -1)

@@ -1,10 +1,9 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api.Common.Response;
-using Models.Api.Admin.Request;
-using Models.Api.Admin.Response.Success;
 using Models.Api.ApiEntityModels;
-using Models.Api.Common.Request;
+using Models.Api.Req_Res.Admin.Request;
+using Models.Api.Req_Res.Admin.Response;
+using Models.Api.Req_Res.Common.Response;
 using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
@@ -26,7 +25,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(addProductRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(addProductRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseAdminService.ValidateProductModel(addProductRequestModel);
                 if (error != null)
@@ -52,12 +51,12 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseAdminService.TryFindProduct(deleteProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
-                List<OrderModel> relatedOrders = _warehouseCustomersService.GetOrderList(new() { ProductId = deleteProductRequestModel.ProductId }).OrderList;
+                List<OrderModel> relatedOrders = WarehouseCustomersService.GetOrderList(new() { ProductId = deleteProductRequestModel.ProductId }).OrderList;
                 int rejectedOrderCtr = 0;
                 foreach (var order in relatedOrders)
                 {
@@ -93,7 +92,7 @@ namespace WebApi.Controllers
             try
             {
                 
-                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseAdminService.TryFindProduct(updateProductPriceRequestModel);
                 if (error != null)
@@ -119,7 +118,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
+                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseAdminService.TryFindOrder(rejectOrderRequest);
                 if (error != null)

@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories
                 o.User == order.User && 
                 o.Product == order.Product &&
                 o.Quantity == order.Quantity &&
-                o.OrderPrice == order.OrderPrice &&
+                Math.Abs(o.OrderPrice - order.OrderPrice) < 0.01 &&
                 o.Status == OrderStatus.Created);
         }
 

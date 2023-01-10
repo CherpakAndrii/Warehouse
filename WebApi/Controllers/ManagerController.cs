@@ -1,8 +1,8 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api.Common.Response;
-using Models.Api.Manager.Request;
-using Models.Api.Manager.Response.Success;
+using Models.Api.Req_Res.Common.Response;
+using Models.Api.Req_Res.Manager.Request;
+using Models.Api.Req_Res.Manager.Response;
 using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(updateProductQuantityRequestModel, AccessRights.Manager);
+                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(updateProductQuantityRequestModel, AccessRights.Manager);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseManagerService.TryFindProduct(updateProductQuantityRequestModel);
                 if (error != null)
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseCustomersService.CheckRequest(sendOrderRequest, AccessRights.Manager);
+                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(sendOrderRequest, AccessRights.Manager);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseManagerService.TryFindOrder(sendOrderRequest);
                 if (error != null)

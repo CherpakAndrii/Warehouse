@@ -1,8 +1,7 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api.Common.Response;
-using Models.Api.Common.Request;
-using Models.DBModels;
+using Models.Api.Req_Res.Common.Request;
+using Models.Api.Req_Res.Common.Response;
 using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
@@ -11,10 +10,11 @@ namespace WebApi.Controllers
     [ApiController]
     public abstract class CommonController : ControllerBase
     {
-        protected IWarehouseCustomersService _warehouseCustomersService;
-        public CommonController(IWarehouseCustomersService warehouseCustomersService)
+        protected readonly IWarehouseCustomersService WarehouseCustomersService;
+
+        protected CommonController(IWarehouseCustomersService warehouseCustomersService)
         {
-            _warehouseCustomersService = warehouseCustomersService;
+            WarehouseCustomersService = warehouseCustomersService;
         }
 
         [HttpGet]
@@ -24,9 +24,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseCustomersService.CheckRequest(getProductsRequestModel, AccessRights.Any);
+                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(getProductsRequestModel, AccessRights.Any);
                 if (error is not null) return BadRequest(error);
-                GetProductListSuccessModel response = _warehouseCustomersService.GetProductsByCategory(getProductsRequestModel);
+                GetProductListSuccessModel response = WarehouseCustomersService.GetProductsByCategory(getProductsRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);

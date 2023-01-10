@@ -1,5 +1,5 @@
-﻿using Models.Api.Manager.Request;
-using Models.Api.Manager.Response.Success;
+﻿using Models.Api.Req_Res.Manager.Request;
+using Models.Api.Req_Res.Manager.Response;
 
 namespace Infrastructure.Interfaces;
 

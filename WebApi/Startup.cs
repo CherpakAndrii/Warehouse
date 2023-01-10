@@ -4,7 +4,6 @@ using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 //using Microsoft.EntityFrameworkCore;
@@ -84,9 +83,9 @@ namespace WebApi
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            var login = Configuration["Login"];
-            var password = Configuration["Password"];
-            var apiKey = Configuration["ApiKey"];
+            // var login = Configuration["Login"];
+            // var password = Configuration["Password"];
+            // var apiKey = Configuration["ApiKey"];
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,

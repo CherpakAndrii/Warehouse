@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Interfaces;
 using Models.Api.ApiEntityModels;
-using Models.Api.Common.Response;
-using Models.Api.Common.Request;
+using Models.Api.Req_Res.Common.Request;
+using Models.Api.Req_Res.Common.Response;
 using Models.DBModels;
 using Models.DBModels.Enums;
 
@@ -9,20 +9,20 @@ namespace Infrastructure.Services
 {
     public abstract class WarehouseUserService : IWarehouseUserService
     {
-        protected readonly IProductsRepository _productsRepository;
-        protected readonly IOrdersRepository _ordersRepository;
-        protected readonly ISessionsRepository _sessionsRepository;
+        protected readonly IProductsRepository ProductsRepository;
+        protected readonly IOrdersRepository OrdersRepository;
+        private readonly ISessionsRepository _sessionsRepository;
 
         public WarehouseUserService(IProductsRepository productsRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository)
         {
-            _productsRepository = productsRepository;
-            _ordersRepository = ordersRepository;
+            ProductsRepository = productsRepository;
+            OrdersRepository = ordersRepository;
             _sessionsRepository = sessionsRepository;
         }
 
         public ErrorResponseModel TryFindProduct(ActionWithExistingProductRequestModel productRequest)
         {
-            var product = _productsRepository.GetProduct(productRequest.ProductId);
+            var product = ProductsRepository.GetProduct(productRequest.ProductId);
             if (product is null) return new() { ErrorMessage = "product not found" };
 
             return null;
@@ -30,7 +30,7 @@ namespace Infrastructure.Services
 
         public ErrorResponseModel TryFindOrder(ActionWithExistingOrderRequestModel orderRequest)
         {
-            var order = _ordersRepository.GetOrder(orderRequest.OrderId);
+            var order = OrdersRepository.GetOrder(orderRequest.OrderId);
             if (order is null) return new() { ErrorMessage = "order not found" };
 
             return null;
@@ -38,7 +38,7 @@ namespace Infrastructure.Services
 
         public GetProductListSuccessModel GetProductsByCategory(GetProductListRequestModel productListRequest)
         {
-            var products = _productsRepository.GetProductList(productListRequest.ProductCategory);
+            var products = ProductsRepository.GetProductList(productListRequest.ProductCategory);
             List<ProductModel> productModels = new List<ProductModel>();
             foreach (var product in products)
             {
@@ -54,7 +54,7 @@ namespace Infrastructure.Services
         
         public GetOrderListSuccessModel GetOrderList(GetOrderListRequestModel orderListRequest)
         {
-            var orders = _ordersRepository.GetOrderList(orderListRequest.UserId, orderListRequest.ProductId);
+            var orders = OrdersRepository.GetOrderList(orderListRequest.UserId, orderListRequest.ProductId);
             List<OrderModel> orderModels = new List<OrderModel>();
             foreach (var order in orders)
             {

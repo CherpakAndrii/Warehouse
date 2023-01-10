@@ -1,9 +1,8 @@
-﻿using Models.Api.Admin.Request;
-using Models.Api.Admin.Response;
-using Models.Api.Admin.Response.Success;
-using Models.Api.Common.Request;
-using Models.Api.Common.Response;
-using Models.DBModels;
+﻿using Models.Api.Req_Res.Admin.Request;
+using Models.Api.Req_Res.Admin.Response;
+using Models.Api.Req_Res.Common.Request;
+using Models.Api.Req_Res.Common.Response;
+
 
 namespace Infrastructure.Interfaces
 {

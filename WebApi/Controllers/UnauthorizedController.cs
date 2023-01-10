@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api.Common.Request;
-using Models.Api.Common.Response;
+using Models.Api.Req_Res.Common.Request;
+using Models.Api.Req_Res.Common.Response;
 
 namespace WebApi.Controllers
 {
