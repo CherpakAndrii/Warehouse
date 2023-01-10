@@ -14,7 +14,7 @@ namespace WebApi.Controllers
     {
         private readonly IWarehouseAdminService _warehouseAdminService;
         private readonly IWarehouseUserService _warehouseUserService;
-        public AdminController(IWarehouseAdminService warehouseAdminService, IWarehouseUserService warehouseUserService, IWarehouseCustomersService warehouseCustomersService)
+        public AdminController(IWarehouseAdminService warehouseAdminService, IWarehouseUserService warehouseUserService)
         {
             _warehouseAdminService = warehouseAdminService;
             _warehouseUserService = warehouseUserService;
