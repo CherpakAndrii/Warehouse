@@ -9,7 +9,7 @@ using Models.DBModels.Enums;
 namespace Infrastructure.Services
 {
     [Obfuscation]
-    public abstract class WarehouseUserService : IWarehouseUserService
+    public class WarehouseUserService : IWarehouseUserService
     {
         private readonly IProductsRepository _productsRepository;
         private readonly IOrdersRepository _ordersRepository;

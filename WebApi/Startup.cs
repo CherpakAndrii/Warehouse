@@ -3,7 +3,6 @@ using Infrastructure;
 using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,8 +44,6 @@ namespace WebApi
 
             app.UseRouting();
 
-            //app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -62,6 +59,7 @@ namespace WebApi
                     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(3), null);
                 }));
 
+            services.AddTransient<IWarehouseUserService, WarehouseUserService>();
             services.AddTransient<IWarehouseAdminService, WarehouseAdminService>();
             services.AddTransient<IWarehouseManagerService, WarehouseManagerService>();
             services.AddTransient<IWarehouseCustomersService, WarehouseCustomersService>();
@@ -70,7 +68,6 @@ namespace WebApi
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IOrdersRepository, OrdersRepository>();
             services.AddTransient<ISessionsRepository, SessionsRepository>();
-            //services.AddSingleton<IAuthorizationHandler, Authentication>();
             services.AddControllers();
 
             services.AddApplicationInsightsTelemetry();
@@ -80,75 +77,7 @@ namespace WebApi
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            // var login = Configuration["Login"];
-            // var password = Configuration["Password"];
-            // var apiKey = Configuration["ApiKey"];
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
-                options =>
-                {
-                    options.LoginPath = new PathString("/auth/login");
-                    options.AccessDeniedPath = new PathString("/auth/denied");
-                });
-
-            // services.AddAuthorization(options =>
-            // {
-            //     options.AddPolicy("Authorize", policy =>
-            //     {
-            //         policy.Requirements.Add(new AuthenticateRequirement(login, password, apiKey));
-            //     });
-            // });
-
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "basic",
-                    In = ParameterLocation.Header,
-                    Description = "Basic Authorization header using the Bearer scheme."
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "basic"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
-
-                c.AddSecurityDefinition("apiKey", new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "apiKey",
-                    In = ParameterLocation.Header,
-                    Description = "ApiKey Authorization header using the ApiKey scheme."
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "apiKey"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
-            });
+            services.AddSwaggerGen();
         }
 
         private static void UpdateDatabase(IApplicationBuilder app)
