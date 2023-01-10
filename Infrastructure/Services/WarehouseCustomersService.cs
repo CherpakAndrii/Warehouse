@@ -49,7 +49,7 @@ namespace Infrastructure.Services
                 return new() { Success = false, Message = "can't remove already sent order", Order = deletedOrder };
             if (deletedOrder.Status == OrderStatus.Rejected)
                 return new() { Success = false, Message = "this order is already rejected", Order = deletedOrder };
-            Product orderedProduct = _productsRepository.GetProduct(deletedOrder.Product.ProductId.Value!);
+            Product orderedProduct = _productsRepository.GetProduct(deletedOrder.Product.ProductId!.Value);
             orderedProduct.AvailableAmount += (int)deletedOrder.Quantity;
             _ordersRepository.DeleteOrder(deletedOrder);
             _productsRepository.UpdateProduct(orderedProduct);

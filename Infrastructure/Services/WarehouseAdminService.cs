@@ -104,7 +104,7 @@ namespace Infrastructure.Services
                     Message = "login is already in use"
                 };
             PasswordDecryptor decryptor = new PasswordDecryptor();
-            string encryptedPassword = decryptor.EncryptPassword(addWorkerRequest.NewUserLogin, addWorkerRequest.NewUserPassword);
+            string encryptedPassword = decryptor.PrimaryEncryptPassword(addWorkerRequest.NewUserLogin, addWorkerRequest.NewUserPassword);
             _usersRepository.CreateUser(new User()
             {
                 Login = addWorkerRequest.NewUserLogin,
@@ -115,6 +115,8 @@ namespace Infrastructure.Services
                 Role = addWorkerRequest.Role
             });
             User createdUser = _usersRepository.GetUserByLogin(addWorkerRequest.NewUserLogin);
+            createdUser.EncryptedPassword = decryptor.SecondaryEncryptPassword(createdUser, createdUser.EncryptedPassword);
+            _usersRepository.UpdateUser(createdUser);
             return new AddWorkerResponseModel()
             {
                 CreatedUser = createdUser,

@@ -92,7 +92,7 @@ namespace WebApi.Controllers
                     SessionId = removeOrderRequest.SessionId,
                     Login = removeOrderRequest.Login,
                     OrderId = removeOrderRequest.OrderId,
-                    UserId = user.UserId.Value
+                    UserId = user.UserId!.Value
                 };
                 RemoveOrderResponseModel response = _warehouseCustomersService.RemoveOrder(request);
                 if (response == null)

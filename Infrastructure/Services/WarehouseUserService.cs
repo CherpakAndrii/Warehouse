@@ -139,10 +139,11 @@ namespace Infrastructure.Services
             }
             _usersRepository.UpdateUser(myProfile);
             
-            if (updateProfileRequest.NewPassword is not null && pd.EncryptPassword(myProfile.Login, updateProfileRequest.NewPassword) != myProfile.EncryptedPassword)
+            if (updateProfileRequest.NewPassword is not null && pd.SecondaryEncryptPassword(myProfile, pd.PrimaryEncryptPassword(myProfile.Login, updateProfileRequest.NewPassword)) != myProfile.EncryptedPassword)
             {
                 changesCtr++;
-                myProfile.EncryptedPassword = pd.EncryptPassword(myProfile.Login, updateProfileRequest.NewPassword);
+                myProfile.EncryptedPassword = pd.SecondaryEncryptPassword(myProfile,
+                    pd.PrimaryEncryptPassword(myProfile.Login, updateProfileRequest.NewPassword));
                 _usersRepository.UpdateUser(myProfile);
             }
 

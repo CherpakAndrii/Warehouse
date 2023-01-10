@@ -45,7 +45,7 @@ public class WarehouseAuthService : IWarehouseAuthService
                 Success = false,
                 Message = "login is already in use"
             };
-        string encryptedPassword = _decryptor.EncryptPassword(userData.Login, userData.Password);
+        string encryptedPassword = _decryptor.PrimaryEncryptPassword(userData.Login, userData.Password);
         _usersRepository.CreateUser(new User()
         {
             Login = userData.Login,
@@ -56,6 +56,8 @@ public class WarehouseAuthService : IWarehouseAuthService
             Role = UserRole.Customer
         });
         User createdUser = _usersRepository.GetUserByLogin(userData.Login);
+        createdUser.EncryptedPassword = _decryptor.SecondaryEncryptPassword(createdUser, createdUser.EncryptedPassword);
+        _usersRepository.UpdateUser(createdUser);
         return new SignInResponseModel()
         {
             CreatedUser = createdUser,
