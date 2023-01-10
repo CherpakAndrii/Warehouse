@@ -17,8 +17,8 @@ namespace WebApi.Controllers
         }
         
         [HttpGet]
-        [Route("/sign-in")]
-        public IActionResult CheckLogin(TestLoginRequestModel checkLoginRequestModel)
+        [Route("/sign-up")]
+        public IActionResult CheckLogin([FromQuery]TestLoginRequestModel checkLoginRequestModel)
         {
             try
             {
@@ -37,8 +37,7 @@ namespace WebApi.Controllers
         }
         
         [HttpPost]
-        [Route("/sign-in")]
-        //[Authorize(Policy = "Authorize")]
+        [Route("/sign-up")]
         public IActionResult CreateUser(SignInRequestModel createUserRequest)
         {
             try
@@ -59,7 +58,7 @@ namespace WebApi.Controllers
         
         [HttpGet]
         [Route("/log-in")]
-        public IActionResult LogIn(LogInRequestModel logInRequest)
+        public IActionResult LogIn([FromQuery]LogInRequestModel logInRequest)
         {
             try
             {

@@ -8,7 +8,7 @@ namespace WebApi.Controllers
 {
     [Route("api")]
     [ApiController]
-    public abstract class CommonController : ControllerBase
+    public class CommonController : ControllerBase
     {
         private readonly IWarehouseUserService _warehouseUserService;
 
@@ -19,8 +19,7 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("/products")]
-        //[Authorize(Policy = "Authorize")]
-        public IActionResult GetProductList(GetProductListRequestModel getProductsRequestModel)
+        public IActionResult GetProductList([FromQuery] GetProductListRequestModel getProductsRequestModel)
         {
             try
             {
@@ -42,8 +41,7 @@ namespace WebApi.Controllers
         
         [HttpGet]
         [Route("/my-profile")]
-        //[Authorize(Policy = "Authorize")]
-        public IActionResult GetMyProfile(GetMyProfileRequestModel getMyProfileRequest)
+        public IActionResult GetMyProfile([FromQuery] GetMyProfileRequestModel getMyProfileRequest)
         {
             try
             {
@@ -65,7 +63,6 @@ namespace WebApi.Controllers
         
         [HttpPut]
         [Route("/my-profile")]
-        //[Authorize(Policy = "Authorize")]
         public IActionResult UpdateMyProfile(UpdateMyProfileRequestModel updateMyProfileRequest)
         {
             try

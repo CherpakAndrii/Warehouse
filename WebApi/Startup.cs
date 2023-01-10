@@ -6,9 +6,6 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-//using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-//using WebApi.Services;
 
 namespace WebApi
 {

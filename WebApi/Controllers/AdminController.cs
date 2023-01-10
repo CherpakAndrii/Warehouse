@@ -22,7 +22,6 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [Route("/products")]
-        //[Authorize(Policy = "Authorize")]
         public IActionResult AddProduct(AddProductRequestModel addProductRequestModel)
         {
             try
@@ -48,7 +47,6 @@ namespace WebApi.Controllers
         
         [HttpDelete]
         [Route("/products")]
-        //[Authorize(Policy = "Authorize")]
         public IActionResult DeleteProduct(DeleteProductRequestModel deleteProductRequestModel)
         {
             try
@@ -88,7 +86,6 @@ namespace WebApi.Controllers
         
         [HttpPut]
         [Route("/product")]
-        //[Authorize(Policy = "Authorize")]
         public IActionResult UpdateProductPrice(UpdateProductPriceRequestModel updateProductPriceRequestModel)
         {
             try
@@ -115,7 +112,6 @@ namespace WebApi.Controllers
         
         [HttpDelete]
         [Route("/orders")]
-        //[Authorize(Policy = "Authorize")]
         public IActionResult RejectOrder(RejectOrderRequestModel rejectOrderRequest)
         {
             try
@@ -141,7 +137,7 @@ namespace WebApi.Controllers
         
         [HttpGet]
         [Route("/users")]
-        public IActionResult GetUsersList(GetUserListRequestModel getUserListRequest)
+        public IActionResult GetUsersList([FromQuery] GetUserListRequestModel getUserListRequest)
         {
             try
             {
