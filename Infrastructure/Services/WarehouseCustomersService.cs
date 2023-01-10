@@ -6,13 +6,20 @@ using Models.DBModels.Enums;
 
 namespace Infrastructure.Services
 {
-    public class WarehouseCustomersService : WarehouseUserService, IWarehouseCustomersService
+    public class WarehouseCustomersService : IWarehouseCustomersService
     {
-        public WarehouseCustomersService(IProductsRepository productsRepository, IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository) : base(productsRepository, ordersRepository, sessionsRepository) { }
+        private readonly IProductsRepository _productsRepository;
+        private readonly IOrdersRepository _ordersRepository;
+
+        public WarehouseCustomersService(IProductsRepository productsRepository, IOrdersRepository ordersRepository)
+        {
+            _productsRepository = productsRepository;
+            _ordersRepository = ordersRepository;
+        }
 
         public CreateOrderResponseModel MakeOrder(CreateOrderRequestModel createRequest)
         {
-            Product orderedProduct = ProductsRepository.GetProduct(createRequest.Product.ProductId);
+            Product orderedProduct = _productsRepository.GetProduct(createRequest.Product.ProductId);
             Order newOrder = new Order
             {
                 Status = OrderStatus.Created,
@@ -21,10 +28,10 @@ namespace Infrastructure.Services
                 OrderPrice = createRequest.Product.Price * createRequest.Quantity,
                 User = createRequest.User
             };
-            OrdersRepository.CreateOrder(newOrder);
+            _ordersRepository.CreateOrder(newOrder);
             orderedProduct.AvailableAmount -= (int)createRequest.Quantity;
-            ProductsRepository.UpdateProduct(orderedProduct);
-            var addedOrder = OrdersRepository.GetJustCreatedOrder(newOrder); // to get orderId
+            _productsRepository.UpdateProduct(orderedProduct);
+            var addedOrder = _ordersRepository.GetJustCreatedOrder(newOrder); // to get orderId
             return new() 
             {
                 Order = addedOrder,
@@ -35,17 +42,17 @@ namespace Infrastructure.Services
 
         public RemoveOrderResponseModel RemoveOrder(RemoveOrderRequestModel removeOrderRequest)
         {
-            var deletedOrder = OrdersRepository.GetOrder(removeOrderRequest.OrderId);
+            var deletedOrder = _ordersRepository.GetOrder(removeOrderRequest.OrderId);
             if (deletedOrder.User.UserId != removeOrderRequest.UserId)
                 return new() { Success = false, Message = "can't remove another user's order", Order = deletedOrder };
             if (deletedOrder.Status == OrderStatus.Sent)
                 return new() { Success = false, Message = "can't remove already sent order", Order = deletedOrder };
             if (deletedOrder.Status == OrderStatus.Rejected)
                 return new() { Success = false, Message = "this order is already rejected", Order = deletedOrder };
-            Product orderedProduct = ProductsRepository.GetProduct(deletedOrder.Product.ProductId.Value!);
+            Product orderedProduct = _productsRepository.GetProduct(deletedOrder.Product.ProductId.Value!);
             orderedProduct.AvailableAmount += (int)deletedOrder.Quantity;
-            OrdersRepository.DeleteOrder(deletedOrder);
-            ProductsRepository.UpdateProduct(orderedProduct);
+            _ordersRepository.DeleteOrder(deletedOrder);
+            _productsRepository.UpdateProduct(orderedProduct);
             return new()
             {
                 Order = deletedOrder,

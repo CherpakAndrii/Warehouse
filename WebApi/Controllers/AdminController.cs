@@ -10,12 +10,14 @@ namespace WebApi.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class AdminController : WareHouseWorkerController
+    public class AdminController : ControllerBase
     {
         private readonly IWarehouseAdminService _warehouseAdminService;
-        public AdminController(IWarehouseAdminService warehouseAdminService, IWarehouseCustomersService warehouseCustomersService) : base(warehouseCustomersService)
+        private readonly IWarehouseUserService _warehouseUserService;
+        public AdminController(IWarehouseAdminService warehouseAdminService, IWarehouseUserService warehouseUserService, IWarehouseCustomersService warehouseCustomersService)
         {
             _warehouseAdminService = warehouseAdminService;
+            _warehouseUserService = warehouseUserService;
         }
 
         [HttpPost]
@@ -25,7 +27,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(addProductRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(addProductRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseAdminService.ValidateProductModel(addProductRequestModel);
                 if (error != null)
@@ -51,12 +53,12 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
-                error = _warehouseAdminService.TryFindProduct(deleteProductRequestModel);
+                error = _warehouseUserService.TryFindProduct(deleteProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
-                List<OrderModel> relatedOrders = WarehouseCustomersService.GetOrderList(new() { ProductId = deleteProductRequestModel.ProductId }).OrderList;
+                List<OrderModel> relatedOrders = _warehouseUserService.GetOrderList(new() { ProductId = deleteProductRequestModel.ProductId }).OrderList;
                 int rejectedOrderCtr = 0;
                 foreach (var order in relatedOrders)
                 {
@@ -92,9 +94,9 @@ namespace WebApi.Controllers
             try
             {
                 
-                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
-                error = _warehouseAdminService.TryFindProduct(updateProductPriceRequestModel);
+                error = _warehouseUserService.TryFindProduct(updateProductPriceRequestModel);
                 if (error != null)
                     return BadRequest(error);
                 UpdateProductPriceSuccessModel response = _warehouseAdminService.UpdateProductPrice(updateProductPriceRequestModel);
@@ -118,9 +120,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
-                error = _warehouseAdminService.TryFindOrder(rejectOrderRequest);
+                error = _warehouseUserService.TryFindOrder(rejectOrderRequest);
                 if (error != null)
                     return BadRequest(error);
                 RejectOrderSuccessModel response = _warehouseAdminService.RejectOrder(rejectOrderRequest);

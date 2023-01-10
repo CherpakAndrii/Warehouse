@@ -3,7 +3,7 @@ using Models.Api.Req_Res.Manager.Response;
 
 namespace Infrastructure.Interfaces;
 
-public interface IWarehouseManagerService : IWarehouseUserService
+public interface IWarehouseManagerService
 {
     UpdateProductQuantitySuccessModel ChangeProductQuantity(UpdateProductQuantityRequestModel product);
     SendOrderSuccessModel SendOrder(SendOrderRequestModel sendOrderRequest);

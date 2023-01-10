@@ -3,7 +3,7 @@ using Models.Api.Req_Res.Customer.Response;
 
 namespace Infrastructure.Interfaces
 {
-    public interface IWarehouseCustomersService : IWarehouseUserService
+    public interface IWarehouseCustomersService
     {
         CreateOrderResponseModel MakeOrder(CreateOrderRequestModel createRequest);
         RemoveOrderResponseModel RemoveOrder(RemoveOrderRequestModel removeOrderRequest);

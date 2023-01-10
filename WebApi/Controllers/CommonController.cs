@@ -10,9 +10,9 @@ namespace WebApi.Controllers
     [ApiController]
     public abstract class CommonController : ControllerBase
     {
-        protected readonly IWarehouseCustomersService WarehouseCustomersService;
+        protected readonly IWarehouseUserService WarehouseCustomersService;
 
-        protected CommonController(IWarehouseCustomersService warehouseCustomersService)
+        protected CommonController(IWarehouseUserService warehouseCustomersService)
         {
             WarehouseCustomersService = warehouseCustomersService;
         }

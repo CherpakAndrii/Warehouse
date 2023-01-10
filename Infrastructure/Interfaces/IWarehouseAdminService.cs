@@ -6,7 +6,7 @@ using Models.Api.Req_Res.Common.Response;
 
 namespace Infrastructure.Interfaces
 {
-    public interface IWarehouseAdminService : IWarehouseUserService
+    public interface IWarehouseAdminService
     {
         ErrorResponseModel ValidateProductModel(AddProductRequestModel product);
 

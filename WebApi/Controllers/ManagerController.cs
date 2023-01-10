@@ -9,12 +9,14 @@ namespace WebApi.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class ManagerController : WareHouseWorkerController
+    public class ManagerController : ControllerBase
     {
         private readonly IWarehouseManagerService _warehouseManagerService;
-        public ManagerController(IWarehouseManagerService warehouseManagerService, IWarehouseCustomersService warehouseCustomersService): base (warehouseCustomersService)
+        private readonly IWarehouseUserService _warehouseUserService;
+        public ManagerController(IWarehouseManagerService warehouseManagerService, IWarehouseUserService warehouseUserService)
         {
             _warehouseManagerService = warehouseManagerService;
+            _warehouseUserService = warehouseUserService;
         }
 
         [HttpPut]
@@ -24,9 +26,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(updateProductQuantityRequestModel, AccessRights.Manager);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(updateProductQuantityRequestModel, AccessRights.Manager);
                 if (error is not null) return BadRequest(error);
-                error = _warehouseManagerService.TryFindProduct(updateProductQuantityRequestModel);
+                error = _warehouseUserService.TryFindProduct(updateProductQuantityRequestModel);
                 if (error != null)
                     return BadRequest(error);
                 ActionWithProductSuccessModel response = _warehouseManagerService.ChangeProductQuantity(updateProductQuantityRequestModel);
@@ -50,9 +52,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(sendOrderRequest, AccessRights.Manager);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(sendOrderRequest, AccessRights.Manager);
                 if (error is not null) return BadRequest(error);
-                error = _warehouseManagerService.TryFindOrder(sendOrderRequest);
+                error = _warehouseUserService.TryFindOrder(sendOrderRequest);
                 if (error != null)
                     return BadRequest(error);
                 SendOrderSuccessModel response = _warehouseManagerService.SendOrder(sendOrderRequest);

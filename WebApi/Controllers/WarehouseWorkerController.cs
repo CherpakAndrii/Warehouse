@@ -8,9 +8,14 @@ namespace WebApi.Controllers
 {
     [Route("api")]
     [ApiController]
-    public abstract class WareHouseWorkerController : CommonController
+    public abstract class WareHouseWorkerController : ControllerBase
     {
-        protected WareHouseWorkerController(IWarehouseCustomersService warehouseCustomersService) : base(warehouseCustomersService) { }
+        private readonly IWarehouseUserService _warehouseUserService;
+
+        protected WareHouseWorkerController(IWarehouseUserService warehouseUserService)
+        {
+            _warehouseUserService = warehouseUserService;
+        }
 
         [HttpGet]
         [Route("/orders")]
@@ -19,9 +24,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = WarehouseCustomersService.CheckRequest(getOrdersRequestModel, AccessRights.Worker);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(getOrdersRequestModel, AccessRights.Worker);
                 if (error is not null) return BadRequest(error);
-                GetOrderListSuccessModel response = WarehouseCustomersService.GetOrderList(getOrdersRequestModel);
+                GetOrderListSuccessModel response = _warehouseUserService.GetOrderList(getOrdersRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);
