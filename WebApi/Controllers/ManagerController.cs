@@ -1,10 +1,9 @@
 ﻿using Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Models.Api.Common.Request;
-using Models.Api.Common.Response;
-using Models.Api.Manager.Request;
-using Models.Api.Manager.Response.Success;
+using Models.Api.Req_Res.Common.Response;
+using Models.Api.Req_Res.Manager.Request;
+using Models.Api.Req_Res.Manager.Response;
+using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
 {
@@ -12,28 +11,30 @@ namespace WebApi.Controllers
     [ApiController]
     public class ManagerController : ControllerBase
     {
-        private IWarehouseManagerService _warehouseManagerService;
-        private IWarehouseCustomersService _warehouseCustomersService;
-        public ManagerController(IWarehouseManagerService warehouseManagerService, IWarehouseCustomersService warehouseCustomersService)
+        private readonly IWarehouseManagerService _warehouseManagerService;
+        private readonly IWarehouseUserService _warehouseUserService;
+        public ManagerController(IWarehouseManagerService warehouseManagerService, IWarehouseUserService warehouseUserService)
         {
             _warehouseManagerService = warehouseManagerService;
-            _warehouseCustomersService = warehouseCustomersService;
+            _warehouseUserService = warehouseUserService;
         }
 
-        [HttpPost]
-        [Route("/update/product/quantity/increase")]
+        [HttpPut]
+        [Route("/products/quantity")]
         //[Authorize(Policy = "Authorize")]
-        public IActionResult IncreaseProductQuantity(IncreaseProductQuantityRequestModel increaseProductQuantityRequestModel)
+        public IActionResult ChangeProductQuantity(UpdateProductQuantityRequestModel updateProductQuantityRequestModel)
         {
             try
             {
-                ErrorResponseModel error = _warehouseManagerService.TryFindProduct(increaseProductQuantityRequestModel);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(updateProductQuantityRequestModel, AccessRights.Manager);
+                if (error is not null) return BadRequest(error);
+                error = _warehouseUserService.TryFindProduct(updateProductQuantityRequestModel);
                 if (error != null)
                     return BadRequest(error);
-                ActionWithProductSuccessModel response = _warehouseManagerService.AddProductQuantity(increaseProductQuantityRequestModel);
+                ActionWithProductSuccessModel response = _warehouseManagerService.ChangeProductQuantity(updateProductQuantityRequestModel);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(increaseProductQuantityRequestModel);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -43,45 +44,23 @@ namespace WebApi.Controllers
                 };
             }
         }
-        
-        [HttpPost]
-        [Route("/update/product/quantity/decrease")]
-        //[Authorize(Policy = "Authorize")]
-        public IActionResult DecreaseProductQuantity(DecreaseProductQuantityRequestModel decreaseProductQuantityRequestModel)
-        {
-            try
-            {
-                ErrorResponseModel error = _warehouseManagerService.TryFindProduct(decreaseProductQuantityRequestModel);
-                if (error != null)
-                    return BadRequest(error);
-                ActionWithProductSuccessModel response = _warehouseManagerService.DecreaseProductQuantity(decreaseProductQuantityRequestModel);
-                if (response == null)
-                    return StatusCode(500);
-                return Ok(decreaseProductQuantityRequestModel);
-            }
-            catch (Exception ex)
-            {
-                return new BadRequestObjectResult(ex.Message)
-                {
-                    StatusCode = 500
-                };
-            }
-        }
-        
-        [HttpPost]
-        [Route("/update/order/send")]
+
+        [HttpPut]
+        [Route("/orders")]
         //[Authorize(Policy = "Authorize")]
         public IActionResult SendOrder(SendOrderRequestModel sendOrderRequest)
         {
             try
             {
-                ErrorResponseModel error = _warehouseManagerService.TryFindOrder(sendOrderRequest);
+                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(sendOrderRequest, AccessRights.Manager);
+                if (error is not null) return BadRequest(error);
+                error = _warehouseUserService.TryFindOrder(sendOrderRequest);
                 if (error != null)
                     return BadRequest(error);
                 SendOrderSuccessModel response = _warehouseManagerService.SendOrder(sendOrderRequest);
                 if (response == null)
                     return StatusCode(500);
-                return Ok(sendOrderRequest);
+                return Ok(response);
             }
             catch (Exception ex)
             {

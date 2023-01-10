@@ -1,16 +1,10 @@
-﻿using Models.Api.Admin.Response.Success;
-using Models.Api.Common.Request;
-using Models.Api.Common.Response;
-using Models.Api.Manager.Request;
-using Models.Api.Manager.Response.Success;
+﻿using Models.Api.Req_Res.Manager.Request;
+using Models.Api.Req_Res.Manager.Response;
 
 namespace Infrastructure.Interfaces;
 
-public interface IWarehouseManagerService : IWarehouseUserService
+public interface IWarehouseManagerService
 {
-    UpdateProductQuantitySuccessModel AddProductQuantity(IncreaseProductQuantityRequestModel product);
-    UpdateProductQuantitySuccessModel DecreaseProductQuantity(DecreaseProductQuantityRequestModel product);
+    UpdateProductQuantitySuccessModel ChangeProductQuantity(UpdateProductQuantityRequestModel product);
     SendOrderSuccessModel SendOrder(SendOrderRequestModel sendOrderRequest);
-
-    string GetAllOrders();
 }

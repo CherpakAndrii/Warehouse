@@ -1,12 +1,11 @@
-﻿using Models.DBModels;
+﻿using Models.Api.Req_Res.Customer.Request;
+using Models.Api.Req_Res.Customer.Response;
 
 namespace Infrastructure.Interfaces
 {
-    public interface IWarehouseCustomersService : IWarehouseUserService
+    public interface IWarehouseCustomersService
     {
-        string GetProducts(string category = null);
-        string GetMyOrders();
-        string MakeOrder(Product product);
-        string GetProductInfo();
+        CreateOrderResponseModel MakeOrder(CreateOrderRequestModel createRequest);
+        RemoveOrderResponseModel RemoveOrder(RemoveOrderRequestModel removeOrderRequest);
     }
 }

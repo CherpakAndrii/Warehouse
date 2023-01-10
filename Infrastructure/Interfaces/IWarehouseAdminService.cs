@@ -1,24 +1,23 @@
-﻿using Models.Api.Admin.Request;
-using Models.Api.Admin.Response.Success;
-using Models.Api.Common.Request;
-using Models.Api.Common.Response;
-using Models.DBModels;
+﻿using Models.Api.Req_Res.Admin.Request;
+using Models.Api.Req_Res.Admin.Response;
+using Models.Api.Req_Res.Common.Request;
+using Models.Api.Req_Res.Common.Response;
+
 
 namespace Infrastructure.Interfaces
 {
-    public interface IWarehouseAdminService : IWarehouseUserService
+    public interface IWarehouseAdminService
     {
         ErrorResponseModel ValidateProductModel(AddProductRequestModel product);
 
-        Product ConvertToProduct(AddProductRequestModel product);
-        AddProductSuccessModel AddProduct(Product product);
+        AddProductSuccessModel AddProduct(AddProductRequestModel product);
         UpdateProductPriceSuccessModel UpdateProductPrice(UpdateProductPriceRequestModel productRequest);
         DeleteProductSuccessModel DeleteProduct(ActionWithExistingProductRequestModel productRequest);
         RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest);
 
 
-        string GetAllCustomers();
-        string GetAllOrders();
-        string GetInternalInfo();
+        GetUserListResponseModel GetUserList(GetUserListRequestModel getUserListRequest);
+        AddWorkerResponseModel AddWorker(AddWorkerRequestModel addWorkerRequest);
+        public RemoveUserResponseModel RemoveWorker(RemoveWorkerRequestModel removeWorkerRequest);
     }
 }
