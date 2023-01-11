@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Models.Api.Req_Res.Common.Request;
 using Models.Api.Req_Res.Common.Response;
+using Models.DBModels;
 using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
@@ -68,6 +69,30 @@ namespace WebApi.Controllers
                 (ErrorResponseModel error, _) = _warehouseUserService.AdvancedCheckRequest(updateMyProfileRequest, AccessRights.Any);
                 if (error is not null) return BadRequest(error);
                 UpdateMyProfileResponseModel response = _warehouseUserService.UpdateMyProfile(updateMyProfileRequest);
+                if (response == null)
+                    return StatusCode(500);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(ex.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+        }
+        
+        [HttpDelete]
+        [Route("/my-profile")]
+        public IActionResult DeleteMyAcc(RemoveMyProfileRequestModel removeMyAccRequest)
+        {
+            try
+            {
+                (ErrorResponseModel error, User user) = _warehouseUserService.AdvancedCheckRequest(removeMyAccRequest, AccessRights.Any);
+                if (error is not null) return BadRequest(error);
+
+                RemoveUserRequest request = new() { UserId = user.UserId!.Value };
+                RemoveMyProfileResponseModel response = _warehouseUserService.DeleteMyProfile(request);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);

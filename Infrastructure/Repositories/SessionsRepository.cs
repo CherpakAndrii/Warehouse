@@ -12,14 +12,14 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public int CreateSessionAndGetSessionId(User user)
+        public int CreateSessionAndGetSessionId(int userId)
         {
-            CloseSessionForUser(user);
-            Session createdSession = new Session() { User = user };
+            CloseSessionForUser(userId);
+            Session createdSession = new Session() { UserId = userId };
             _context.Sessions.Add(createdSession);
             _context.SaveChanges();
             
-            createdSession = _context.Sessions.FirstOrDefault(s => s.User == user);
+            createdSession = _context.Sessions.FirstOrDefault(s => s.UserId == userId);
             return createdSession.SessionId.Value;
         }
 
@@ -30,18 +30,18 @@ namespace Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public void CloseSessionForUser(User user)
+        public void CloseSessionForUser(int userId)
         {
-            Session session = _context.Sessions.FirstOrDefault(s => s.User == user);
+            Session session = _context.Sessions.FirstOrDefault(s => s.UserId == userId);
             if (session is not null) _context.Sessions.Remove(session);
             _context.SaveChanges();
         }
 
-        public User GetUserBySessionId(int sessionId)
+        public int GetUserBySessionId(int sessionId)
         {
             Session session = _context.Sessions.FirstOrDefault(s => s.SessionId == sessionId);
-            if (session is null) return null;
-            return session.User;
+            if (session is null) return -1;
+            return session.UserId;
         }
     }
 }

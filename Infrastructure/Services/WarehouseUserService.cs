@@ -73,8 +73,9 @@ namespace Infrastructure.Services
 
         public (ErrorResponseModel, User) CheckRequest(CommonUserRequestModel request, AccessRights neededRights)
         {
-            User requestUser = _sessionsRepository.GetUserBySessionId(request.SessionId);
-            if (requestUser is null) return (new() { ErrorMessage = "401 Unauthorized" }, null);
+            int requestedUserId = _sessionsRepository.GetUserBySessionId(request.SessionId);
+            if (requestedUserId == -1) return (new() { ErrorMessage = "401 Unauthorized" }, null);
+            User requestUser = _usersRepository.GetUser(requestedUserId);
             if (request.Login != requestUser.Login)
             {
                 _sessionsRepository.CloseSessionById(request.SessionId); // someone is trying to use another user`s session!  
@@ -104,7 +105,7 @@ namespace Infrastructure.Services
 
         public GetMyProfileResponseModel GetMyProfileDetails(GetMyProfileRequestModel getMyProfileRequestModel)
         {
-            var myProfile = _sessionsRepository.GetUserBySessionId(getMyProfileRequestModel.SessionId);
+            var myProfile = _usersRepository.GetUser(_sessionsRepository.GetUserBySessionId(getMyProfileRequestModel.SessionId));
             return new()
             {
                 Profile = myProfile
@@ -113,7 +114,7 @@ namespace Infrastructure.Services
 
         public UpdateMyProfileResponseModel UpdateMyProfile(UpdateMyProfileRequestModel updateProfileRequest)
         {
-            var myProfile = _sessionsRepository.GetUserBySessionId(updateProfileRequest.SessionId);
+            var myProfile = _usersRepository.GetUser(_sessionsRepository.GetUserBySessionId(updateProfileRequest.SessionId));
             int changesCtr = 0;
             if (updateProfileRequest.NewEmail is not null && updateProfileRequest.NewEmail != myProfile.Email)
             {
@@ -151,6 +152,18 @@ namespace Infrastructure.Services
             {
                 Profile = myProfile,
                 ChangesCounter = changesCtr
+            };
+        }
+
+        public RemoveMyProfileResponseModel DeleteMyProfile(RemoveUserRequest removeMyProfileRequest)
+        {
+            var deletedUser = _usersRepository.GetUser(removeMyProfileRequest.UserId);
+            _sessionsRepository.CloseSessionForUser(deletedUser.UserId!.Value);
+            _usersRepository.DeleteUser(deletedUser);
+            return new()
+            {
+                Success = true,
+                Message = $"your profile deleted successfully"
             };
         }
     }

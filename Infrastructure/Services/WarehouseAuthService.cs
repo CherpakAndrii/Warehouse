@@ -84,7 +84,7 @@ public class WarehouseAuthService : IWarehouseAuthService
             };
         }
 
-        int sessionId = _sessionsRepository.CreateSessionAndGetSessionId(user);
+        int sessionId = _sessionsRepository.CreateSessionAndGetSessionId(user.UserId!.Value);
         return new TryLogInResponseModel()
         {
             Success = true,
