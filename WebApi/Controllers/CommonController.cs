@@ -12,7 +12,7 @@ namespace WebApi.Controllers
     {
         private readonly IWarehouseUserService _warehouseUserService;
 
-        protected CommonController(IWarehouseUserService warehouseUserService)
+        public CommonController(IWarehouseUserService warehouseUserService)
         {
             _warehouseUserService = warehouseUserService;
         }
@@ -23,8 +23,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(getProductsRequestModel, AccessRights.Any);
-                if (error is not null) return BadRequest(error);
                 GetProductListSuccessModel response = _warehouseUserService.GetProductsByCategory(getProductsRequestModel);
                 if (response == null)
                     return StatusCode(500);

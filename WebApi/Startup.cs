@@ -58,12 +58,12 @@ namespace WebApi
                 {
                     builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(3), null);
                 }));
-
-            services.AddTransient<IWarehouseUserService, WarehouseUserService>();
+            
             services.AddTransient<IWarehouseAdminService, WarehouseAdminService>();
             services.AddTransient<IWarehouseManagerService, WarehouseManagerService>();
             services.AddTransient<IWarehouseCustomersService, WarehouseCustomersService>();
             services.AddTransient<IWarehouseAuthService, WarehouseAuthService>();
+            services.AddTransient<IWarehouseUserService, WarehouseUserService>();
             services.AddTransient<IProductsRepository, ProductsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<IOrdersRepository, OrdersRepository>();
@@ -84,7 +84,7 @@ namespace WebApi
         {
             using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
             using var context = serviceScope.ServiceProvider.GetService<AppDbContext>();
-            context.Database.Migrate();
+            context!.Database.Migrate();
         }
     }
 }
