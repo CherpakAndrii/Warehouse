@@ -59,9 +59,9 @@ namespace WebApi.Controllers
                 CreateOrderRequestModel request = new()
                 {
                     SessionId = createOrderRequest.SessionId, 
-                    Product = createOrderRequest.Product,
+                    ProductId = createOrderRequest.ProductId,
                     Quantity = createOrderRequest.Quantity,
-                    User = user
+                    UserId = user.UserId!.Value
                 };
                 CreateOrderResponseModel response = _warehouseCustomersService.MakeOrder(request);
                 if (response == null)

@@ -22,7 +22,7 @@ public class UserModel
     public string Phone { get; set; }
     
     [JsonPropertyName("role")]
-    public UserRole Role { get; set; }
+    public string Role { get; set; }
         
     private UserModel(User user)
     {
@@ -31,7 +31,7 @@ public class UserModel
         Name = user.Name;
         Email = user.Email;
         Phone = user.Phone;
-        Role = user.Role;
+        Role = user.Role.ToString();
     }
         
     public static implicit operator UserModel(User u) => new (u);
@@ -43,6 +43,6 @@ public class UserModel
         Name = um.Name,
         Email = um.Email,
         Phone = um.Phone,
-        Role = um.Role
+        Role = Enum.Parse<UserRole>(um.Role)
     };
 }

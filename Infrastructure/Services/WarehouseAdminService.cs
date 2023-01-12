@@ -69,7 +69,7 @@ namespace Infrastructure.Services
             var rejectedOrder = _ordersRepository.GetOrder(orderRequest.OrderId);
             if (rejectedOrder.Status == OrderStatus.Rejected) return new RejectOrderSuccessModel(){ Order = rejectedOrder, Success = false, Message = "This order is already rejected"};
             if (rejectedOrder.Status == OrderStatus.Sent) return new RejectOrderSuccessModel(){ Order = rejectedOrder, Success = false, Message = "This order is already sent, can't reject it"};
-            var orderedProduct = rejectedOrder.Product;
+            var orderedProduct = _productsRepository.GetProduct(rejectedOrder.ProductId);
             rejectedOrder.Status = OrderStatus.Rejected;
             orderedProduct.AvailableAmount += (int)rejectedOrder.Quantity;
             _ordersRepository.UpdateOrder(rejectedOrder);

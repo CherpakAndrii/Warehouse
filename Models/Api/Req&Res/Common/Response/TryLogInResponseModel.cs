@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Models.DBModels.Enums;
 
 namespace Models.Api.Req_Res.Common.Response
 {
@@ -9,6 +10,9 @@ namespace Models.Api.Req_Res.Common.Response
         [JsonPropertyName("message")] 
         public string Message { get; set; }
         [JsonPropertyName("sessionId")] 
-        public int? SessionId { get; set; }
+        public int SessionId { get; set; }
+
+        [JsonPropertyName("role")] 
+        public UserRole Role { get; set; }
     }
 }

@@ -9,34 +9,34 @@ public class OrderModel
     [JsonPropertyName("orderId")]
     public int OrderId { get; set; }
     [JsonPropertyName("status")]
-    public OrderStatus Status { get; set; }
+    public string Status { get; set; }
     [JsonPropertyName("product")]
-    public ProductModel Product { get; set; }
+    public int ProductId { get; set; }
     [JsonPropertyName("quantity")]
     public uint Quantity { get; set; }
     [JsonPropertyName("price")]
     public double OrderPrice { get; set; }
     [JsonPropertyName("user")]
-    public UserModel User { get; set; }
+    public int UserId { get; set; }
         
     public OrderModel(Order order)
     {
         OrderId = order.OrderId;
-        Status = order.Status;
-        Product = order.Product;
+        Status = order.Status.ToString();
+        ProductId = order.ProductId;
         Quantity = order.Quantity;
         OrderPrice = order.OrderPrice;
-        User = order.User;
+        UserId = order.UserId;
     }
         
     public static implicit operator OrderModel(Order o) => new (o);
     public static implicit operator Order(OrderModel om) => new ()
     {
         OrderId = om.OrderId,
-        Status = om.Status,
-        Product = om.Product,
+        Status = Enum.Parse<OrderStatus>(om.Status),
+        ProductId = om.ProductId,
         Quantity = om.Quantity,
         OrderPrice = om.OrderPrice,
-        User = om.User
+        UserId = om.UserId
     };
 }

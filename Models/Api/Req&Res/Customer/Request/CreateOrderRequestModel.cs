@@ -7,10 +7,11 @@ namespace Models.Api.Req_Res.Customer.Request
 {
     public class CreateOrderRequestModel : CommonUserRequestModel
     {
-        public ProductModel Product { get; set; }
+        [JsonPropertyName("productId")]
+        public int ProductId { get; set; }
         [JsonPropertyName("quantity")]
         public uint Quantity { get; set; }
-        [JsonPropertyName("user")]
-        public User User { get; set; }
+        [JsonPropertyName("userId")]
+        public int UserId { get; set; }
     }
 }

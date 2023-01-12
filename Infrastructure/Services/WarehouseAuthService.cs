@@ -73,14 +73,16 @@ public class WarehouseAuthService : IWarehouseAuthService
             return new TryLogInResponseModel()
             {
                 Success = false,
-                Message = "login is not recognized"
+                Message = "login is not recognized",
+                SessionId = -1
             };
         if (!_decryptor.CheckPassword(user, credentials.Password))
         {
             return new TryLogInResponseModel()
             {
                 Success = false,
-                Message = "incorrect login or password"
+                Message = "incorrect login or password",
+                SessionId = -1
             };
         }
 
@@ -89,7 +91,8 @@ public class WarehouseAuthService : IWarehouseAuthService
         {
             Success = true,
             Message = "successfully logged in",
-            SessionId = sessionId
+            SessionId = sessionId,
+            Role = user.Role
         };
     }
 }

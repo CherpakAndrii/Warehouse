@@ -6,6 +6,6 @@ namespace Models.Api.Req_Res.Manager.Request
     public class UpdateProductQuantityRequestModel : ActionWithExistingProductRequestModel
     {
         [JsonPropertyName("productQuantityDifference")]
-        public uint ProductQuantityDifference { get; set; }
+        public int ProductQuantityDifference { get; set; }
     }
 }
