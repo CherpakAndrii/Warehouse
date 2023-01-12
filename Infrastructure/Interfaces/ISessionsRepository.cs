@@ -4,9 +4,9 @@ namespace Infrastructure.Interfaces
 {
     public interface ISessionsRepository
     {
-        int CreateSessionAndGetSessionId(User user);
+        int CreateSessionAndGetSessionId(int userId);
         void CloseSessionById(int sessionId);
-        void CloseSessionForUser(User user);
-        User GetUserBySessionId(int sessionId);
+        void CloseSessionForUser(int userId);
+        int GetUserBySessionId(int sessionId);
     }
 }

@@ -4,6 +4,7 @@ using Models.Api.ApiEntityModels;
 using Models.Api.Req_Res.Admin.Request;
 using Models.Api.Req_Res.Admin.Response;
 using Models.Api.Req_Res.Common.Response;
+using Models.DBModels;
 using Models.DBModels.Enums;
 
 namespace WebApi.Controllers
@@ -185,8 +186,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.AdvancedCheckRequest(removeWorkerRequest, AccessRights.Admin);
+                (ErrorResponseModel error, User user) = _warehouseUserService.AdvancedCheckRequest(removeWorkerRequest, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
+                if (user.UserId == removeWorkerRequest.UserId) return BadRequest(new ErrorResponseModel(){ErrorMessage = "can't remove yourself"});
                 RemoveUserResponseModel response = _warehouseAdminService.RemoveWorker(removeWorkerRequest);
                 if (response == null)
                     return StatusCode(500);

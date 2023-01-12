@@ -7,6 +7,6 @@ namespace Models.DBModels
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? SessionId { get; set; }
-        public User User { get; set; }
+        public int UserId { get; set; }
     }
 }

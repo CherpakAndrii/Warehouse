@@ -15,5 +15,6 @@ namespace Infrastructure.Interfaces
         (ErrorResponseModel, User) AdvancedCheckRequest(AdditionalSecurityRequestModel request, AccessRights neededRights);
         GetMyProfileResponseModel GetMyProfileDetails(GetMyProfileRequestModel getMyProfileRequest);
         UpdateMyProfileResponseModel UpdateMyProfile(UpdateMyProfileRequestModel updateProfileRequest);
+        public RemoveMyProfileResponseModel DeleteMyProfile(RemoveUserRequest removeMyProfileRequest);
     }
 }

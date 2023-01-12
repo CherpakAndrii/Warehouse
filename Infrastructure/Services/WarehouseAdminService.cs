@@ -16,14 +16,15 @@ namespace Infrastructure.Services
         private readonly IUsersRepository _usersRepository;
         private readonly IProductsRepository _productsRepository;
         private readonly IOrdersRepository _ordersRepository;
+        private readonly ISessionsRepository _sessionsRepository;
 
         public WarehouseAdminService(IProductsRepository productsRepository, IUsersRepository usersRepository,
-            IOrdersRepository ordersRepository)
+            IOrdersRepository ordersRepository, ISessionsRepository sessionsRepository)
         {
             _usersRepository = usersRepository;
             _ordersRepository = ordersRepository;
             _productsRepository = productsRepository;
-            
+            _sessionsRepository = sessionsRepository;
         }
 
         public ErrorResponseModel ValidateProductModel(AddProductRequestModel addProductRequestModel)
@@ -68,7 +69,7 @@ namespace Infrastructure.Services
             var rejectedOrder = _ordersRepository.GetOrder(orderRequest.OrderId);
             if (rejectedOrder.Status == OrderStatus.Rejected) return new RejectOrderSuccessModel(){ Order = rejectedOrder, Success = false, Message = "This order is already rejected"};
             if (rejectedOrder.Status == OrderStatus.Sent) return new RejectOrderSuccessModel(){ Order = rejectedOrder, Success = false, Message = "This order is already sent, can't reject it"};
-            var orderedProduct = rejectedOrder.Product;
+            var orderedProduct = _productsRepository.GetProduct(rejectedOrder.ProductId);
             rejectedOrder.Status = OrderStatus.Rejected;
             orderedProduct.AvailableAmount += (int)rejectedOrder.Quantity;
             _ordersRepository.UpdateOrder(rejectedOrder);
@@ -130,6 +131,8 @@ namespace Infrastructure.Services
             var deletedUser = _usersRepository.GetUser(removeWorkerRequest.UserId);
             if (deletedUser == null)
                 return new() { Success = false, Message = "such user is not found" };
+            
+            _sessionsRepository.CloseSessionForUser(deletedUser.UserId!.Value);
             _usersRepository.DeleteUser(deletedUser);
             return new()
             {

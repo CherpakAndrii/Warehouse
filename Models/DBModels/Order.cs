@@ -9,9 +9,9 @@ namespace Models.DBModels
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int OrderId { get; set; }
         public OrderStatus Status { get; set; }
-        public Product Product { get; set; }
+        public int ProductId { get; set; }
         public uint Quantity { get; set; }
         public double OrderPrice { get; set; }
-        public User User { get; set; }
+        public int UserId { get; set; }
     }
 }

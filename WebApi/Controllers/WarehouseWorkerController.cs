@@ -12,14 +12,14 @@ namespace WebApi.Controllers
     {
         private readonly IWarehouseUserService _warehouseUserService;
 
-        protected WareHouseWorkerController(IWarehouseUserService warehouseUserService)
+        public WareHouseWorkerController(IWarehouseUserService warehouseUserService)
         {
             _warehouseUserService = warehouseUserService;
         }
 
         [HttpGet]
         [Route("/orders")]
-        public IActionResult GetOrderList(GetOrderListRequestModel getOrdersRequestModel)
+        public IActionResult GetOrderList([FromQuery]GetOrderListRequestModel getOrdersRequestModel)
         {
             try
             {

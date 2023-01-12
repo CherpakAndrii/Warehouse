@@ -2,5 +2,5 @@
 
 namespace Models.Api.Req_Res.Customer.Request
 {
-    public abstract class GetMyOrderListRequestModel : CommonUserRequestModel { }
+    public class GetMyOrderListRequestModel : CommonUserRequestModel { }
 }

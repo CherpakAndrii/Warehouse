@@ -1,6 +1,6 @@
 ﻿namespace Models.DBModels.Enums;
 
-public enum AccessRights
+public enum AccessRights : byte
 {
     Admin,
     Manager,
