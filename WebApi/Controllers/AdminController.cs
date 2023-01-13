@@ -15,10 +15,12 @@ namespace WebApi.Controllers
     {
         private readonly IWarehouseAdminService _warehouseAdminService;
         private readonly IWarehouseUserService _warehouseUserService;
-        public AdminController(IWarehouseAdminService warehouseAdminService, IWarehouseUserService warehouseUserService)
+        private readonly IValidationService _validationService;
+        public AdminController(IWarehouseAdminService warehouseAdminService, IWarehouseUserService warehouseUserService, IValidationService validationService)
         {
             _warehouseAdminService = warehouseAdminService;
             _warehouseUserService = warehouseUserService;
+            _validationService = validationService;
         }
 
         [HttpPost]
@@ -27,12 +29,12 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(addProductRequestModel, AccessRights.Admin);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(addProductRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
-                error = _warehouseAdminService.ValidateProductModel(addProductRequestModel);
+                error = _validationService.ValidateProductModel(addProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
-                AddProductSuccessModel response = _warehouseAdminService.AddProduct(addProductRequestModel);
+                AddProductSuccessModel? response = _warehouseAdminService.AddProduct(addProductRequestModel);
                 if (response == null)
                     return StatusCode(500);
                 return Ok(response);
@@ -52,19 +54,19 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(deleteProductRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseUserService.TryFindProduct(deleteProductRequestModel);
                 if (error != null)
                     return BadRequest(error);
                 List<OrderModel> relatedOrders = _warehouseUserService.GetOrderList(new() { ProductId = deleteProductRequestModel.ProductId }).OrderList;
                 int rejectedOrderCtr = 0;
-                foreach (var order in relatedOrders)
+                foreach (Order order in relatedOrders)
                 {
                     if (_warehouseAdminService.RejectOrder(new RejectOrderRequestModel(){OrderId = order.OrderId}).Success) rejectedOrderCtr++;
                 }
                 
-                DeleteProductSuccessModel delResponse = _warehouseAdminService.DeleteProduct(deleteProductRequestModel);
+                DeleteProductSuccessModel? delResponse = _warehouseAdminService.DeleteProduct(deleteProductRequestModel);
                 if (delResponse == null)
                     return StatusCode(500);
                 
@@ -91,12 +93,16 @@ namespace WebApi.Controllers
         {
             try
             {
-                
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(updateProductPriceRequestModel, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseUserService.TryFindProduct(updateProductPriceRequestModel);
                 if (error != null)
                     return BadRequest(error);
+                if (updateProductPriceRequestModel.NewProductPrice <= 0)
+                    return BadRequest(new ErrorResponseModel()
+                    {
+                        ErrorMessage = "price can't be <= 0"
+                    });
                 UpdateProductPriceSuccessModel response = _warehouseAdminService.UpdateProductPrice(updateProductPriceRequestModel);
                 if (response == null)
                     return StatusCode(500);
@@ -117,7 +123,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(rejectOrderRequest, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseUserService.TryFindOrder(rejectOrderRequest);
                 if (error != null)
@@ -142,7 +148,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(getUserListRequest, AccessRights.Admin);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(getUserListRequest, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
                 GetUserListResponseModel response = _warehouseAdminService.GetUserList(getUserListRequest);
                 if (response == null)
@@ -164,8 +170,11 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.AdvancedCheckRequest(addWorkerRequest, AccessRights.Admin);
+                (ErrorResponseModel? error, _) = _warehouseUserService.AdvancedCheckRequest(addWorkerRequest, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
+                error = _validationService.ValidateUserModel(addWorkerRequest);
+                if (error != null)
+                    return BadRequest(error);
                 AddWorkerResponseModel response = _warehouseAdminService.AddWorker(addWorkerRequest);
                 if (response == null)
                     return StatusCode(500);
@@ -186,9 +195,9 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseUserService.AdvancedCheckRequest(removeWorkerRequest, AccessRights.Admin);
+                (ErrorResponseModel? error, User? user) = _warehouseUserService.AdvancedCheckRequest(removeWorkerRequest, AccessRights.Admin);
                 if (error is not null) return BadRequest(error);
-                if (user.UserId == removeWorkerRequest.UserId) return BadRequest(new ErrorResponseModel(){ErrorMessage = "can't remove yourself"});
+                if (user!.UserId == removeWorkerRequest.UserId) return BadRequest(new ErrorResponseModel(){ErrorMessage = "can't remove yourself"});
                 RemoveUserResponseModel response = _warehouseAdminService.RemoveWorker(removeWorkerRequest);
                 if (response == null)
                     return StatusCode(500);

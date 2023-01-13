@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Interfaces;
 using Models.DBModels;
-using Models.DBModels.Enums;
 
 namespace Infrastructure.Repositories
 {
@@ -19,7 +18,7 @@ namespace Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public Order GetOrder(int orderId)
+        public Order? GetOrder(int orderId)
         {
             return _context.Orders.Where(o => o.OrderId == orderId).FirstOrDefault();
         }

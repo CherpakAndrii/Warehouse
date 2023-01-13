@@ -24,7 +24,7 @@ namespace Infrastructure.Services
             _usersRepository = usersRepository;
         }
 
-        public ErrorResponseModel TryFindProduct(ActionWithExistingProductRequestModel productRequest)
+        public ErrorResponseModel? TryFindProduct(ActionWithExistingProductRequestModel productRequest)
         {
             var product = _productsRepository.GetProduct(productRequest.ProductId);
             if (product is null) return new() { ErrorMessage = "product not found" };
@@ -32,9 +32,9 @@ namespace Infrastructure.Services
             return null;
         }
 
-        public ErrorResponseModel TryFindOrder(ActionWithExistingOrderRequestModel orderRequest)
+        public ErrorResponseModel? TryFindOrder(ActionWithExistingOrderRequestModel orderRequest)
         {
-            var order = _ordersRepository.GetOrder(orderRequest.OrderId);
+            Order? order = _ordersRepository.GetOrder(orderRequest.OrderId);
             if (order is null) return new() { ErrorMessage = "order not found" };
 
             return null;
@@ -71,11 +71,11 @@ namespace Infrastructure.Services
             };
         }
 
-        public (ErrorResponseModel, User) CheckRequest(CommonUserRequestModel request, AccessRights neededRights)
+        public (ErrorResponseModel?, User?) CheckRequest(CommonUserRequestModel request, AccessRights neededRights)
         {
             int requestedUserId = _sessionsRepository.GetUserBySessionId(request.SessionId);
             if (requestedUserId == -1) return (new() { ErrorMessage = "401 Unauthorized" }, null);
-            User requestUser = _usersRepository.GetUser(requestedUserId);
+            User requestUser = _usersRepository.GetUser(requestedUserId)!;
             if (request.Login != requestUser.Login)
             {
                 _sessionsRepository.CloseSessionById(request.SessionId); // someone is trying to use another user`s session!  
@@ -89,12 +89,12 @@ namespace Infrastructure.Services
             return (new() { ErrorMessage = "403 Forbidden" }, null);
         }
 
-        public (ErrorResponseModel, User) AdvancedCheckRequest(AdditionalSecurityRequestModel request, AccessRights neededRights)
+        public (ErrorResponseModel?, User?) AdvancedCheckRequest(AdditionalSecurityRequestModel request, AccessRights neededRights)
         {
             var simpleCheckResult = CheckRequest(request, neededRights);
             if (simpleCheckResult.Item1 is not null) return simpleCheckResult;
             PasswordDecryptor pd = new PasswordDecryptor();
-            if (!pd.CheckPassword(simpleCheckResult.Item2, request.CurrentPassword))
+            if (!pd.CheckPassword(simpleCheckResult.Item2!, request.CurrentPassword))
             {
                 _sessionsRepository.CloseSessionById(request.SessionId); 
                 return (new() { ErrorMessage = "409 Conflict" }, null);
@@ -105,7 +105,7 @@ namespace Infrastructure.Services
 
         public GetMyProfileResponseModel GetMyProfileDetails(GetMyProfileRequestModel getMyProfileRequestModel)
         {
-            var myProfile = _usersRepository.GetUser(_sessionsRepository.GetUserBySessionId(getMyProfileRequestModel.SessionId));
+            var myProfile = _usersRepository.GetUser(_sessionsRepository.GetUserBySessionId(getMyProfileRequestModel.SessionId))!;
             return new()
             {
                 Profile = myProfile
@@ -114,7 +114,7 @@ namespace Infrastructure.Services
 
         public UpdateMyProfileResponseModel UpdateMyProfile(UpdateMyProfileRequestModel updateProfileRequest)
         {
-            var myProfile = _usersRepository.GetUser(_sessionsRepository.GetUserBySessionId(updateProfileRequest.SessionId));
+            var myProfile = _usersRepository.GetUser(_sessionsRepository.GetUserBySessionId(updateProfileRequest.SessionId))!;
             int changesCtr = 0;
             if (updateProfileRequest.NewEmail is not null && updateProfileRequest.NewEmail != myProfile.Email)
             {
@@ -157,7 +157,7 @@ namespace Infrastructure.Services
 
         public RemoveMyProfileResponseModel DeleteMyProfile(RemoveUserRequest removeMyProfileRequest)
         {
-            var deletedUser = _usersRepository.GetUser(removeMyProfileRequest.UserId);
+            var deletedUser = _usersRepository.GetUser(removeMyProfileRequest.UserId)!;
             _sessionsRepository.CloseSessionForUser(deletedUser.UserId!.Value);
             _usersRepository.DeleteUser(deletedUser);
             return new()

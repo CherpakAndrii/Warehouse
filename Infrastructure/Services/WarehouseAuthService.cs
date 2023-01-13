@@ -39,23 +39,23 @@ public class WarehouseAuthService : IWarehouseAuthService
 
     public SignInResponseModel TrySignIn(SignInRequestModel userData)
     {
-        if (_usersRepository.GetUserByLogin(userData.Login) is not null)
+        if (_usersRepository.GetUserByLogin(userData.NewUserLogin) is not null)
             return new SignInResponseModel()
             {
                 Success = false,
                 Message = "login is already in use"
             };
-        string encryptedPassword = _decryptor.PrimaryEncryptPassword(userData.Login, userData.Password);
+        string encryptedPassword = _decryptor.PrimaryEncryptPassword(userData.NewUserLogin, userData.NewUserPassword);
         _usersRepository.CreateUser(new User()
         {
-            Login = userData.Login,
+            Login = userData.NewUserLogin,
             Name = userData.Name,
             Email = userData.Email,
             EncryptedPassword = encryptedPassword,
             Phone = userData.Phone,
             Role = UserRole.Customer
         });
-        User createdUser = _usersRepository.GetUserByLogin(userData.Login);
+        User createdUser = _usersRepository.GetUserByLogin(userData.NewUserLogin)!;
         createdUser.EncryptedPassword = _decryptor.SecondaryEncryptPassword(createdUser, createdUser.EncryptedPassword);
         _usersRepository.UpdateUser(createdUser);
         return new SignInResponseModel()
@@ -68,7 +68,7 @@ public class WarehouseAuthService : IWarehouseAuthService
 
     public TryLogInResponseModel TryLogIn(LogInRequestModel credentials)
     {
-        User user = _usersRepository.GetUserByLogin(credentials.Login);
+        User? user = _usersRepository.GetUserByLogin(credentials.Login);
         if (user is null)
             return new TryLogInResponseModel()
             {

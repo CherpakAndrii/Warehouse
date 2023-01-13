@@ -19,27 +19,27 @@ namespace Infrastructure.Repositories
             _context.Sessions.Add(createdSession);
             _context.SaveChanges();
             
-            createdSession = _context.Sessions.FirstOrDefault(s => s.UserId == userId);
-            return createdSession.SessionId.Value;
+            createdSession = _context.Sessions.FirstOrDefault(s => s.UserId == userId)!;
+            return createdSession.SessionId!.Value;
         }
 
         public void CloseSessionById(int sessionId)
         {
-            Session session = _context.Sessions.FirstOrDefault(s => s.SessionId == sessionId);
+            Session? session = _context.Sessions.FirstOrDefault(s => s.SessionId == sessionId);
             if (session is not null) _context.Sessions.Remove(session);
             _context.SaveChanges();
         }
 
         public void CloseSessionForUser(int userId)
         {
-            Session session = _context.Sessions.FirstOrDefault(s => s.UserId == userId);
+            Session? session = _context.Sessions.FirstOrDefault(s => s.UserId == userId);
             if (session is not null) _context.Sessions.Remove(session);
             _context.SaveChanges();
         }
 
         public int GetUserBySessionId(int sessionId)
         {
-            Session session = _context.Sessions.FirstOrDefault(s => s.SessionId == sessionId);
+            Session? session = _context.Sessions.FirstOrDefault(s => s.SessionId == sessionId);
             if (session is null) return -1;
             return session.UserId;
         }

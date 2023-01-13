@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(updateProductQuantityRequestModel, AccessRights.Manager);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(updateProductQuantityRequestModel, AccessRights.Manager);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseUserService.TryFindProduct(updateProductQuantityRequestModel);
                 if (error != null)
@@ -50,7 +50,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(sendOrderRequest, AccessRights.Manager);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(sendOrderRequest, AccessRights.Manager);
                 if (error is not null) return BadRequest(error);
                 error = _warehouseUserService.TryFindOrder(sendOrderRequest);
                 if (error != null)

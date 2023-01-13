@@ -19,12 +19,12 @@ namespace Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public Product GetProduct(int productId)
+        public Product? GetProduct(int productId)
         {
             return _context.Products.Where(c => c.ProductId == productId).FirstOrDefault();
         }
 
-        public Product GetProduct(string name)
+        public Product? GetProduct(string name)
         {
             return _context.Products.Where(p => p.Name == name).FirstOrDefault();
         }

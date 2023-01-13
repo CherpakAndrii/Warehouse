@@ -4,7 +4,6 @@ using Models.Api.ApiEntityModels;
 using Models.Api.Req_Res.Admin.Request;
 using Models.Api.Req_Res.Admin.Response;
 using Models.Api.Req_Res.Common.Request;
-using Models.Api.Req_Res.Common.Response;
 using Models.DBModels;
 using Models.DBModels.Enums;
 
@@ -27,31 +26,17 @@ namespace Infrastructure.Services
             _sessionsRepository = sessionsRepository;
         }
 
-        public ErrorResponseModel ValidateProductModel(AddProductRequestModel addProductRequestModel)
-        {
-            if (addProductRequestModel == null)
-                return new() { ErrorMessage = "no request model found" };
-
-            if (addProductRequestModel.ProductName == null) 
-                return new() { ErrorMessage = "no product name specified" };
-            if (_productsRepository.GetProduct(addProductRequestModel.ProductName) is not null)
-                return new() { ErrorMessage = "product with given name already exists" };
-            if (addProductRequestModel.ProductPrice < 0.01) return new() { ErrorMessage = "price can't be less than 0" };
-            
-            return null;
-        }
-
         public AddProductSuccessModel AddProduct(AddProductRequestModel addProductRequest)
         {
             Product product = addProductRequest.ConvertToProduct();
             _productsRepository.CreateProduct(product);
-            var addedProduct = _productsRepository.GetProduct(product.Name);
+            Product addedProduct = _productsRepository.GetProduct(product.Name)!;
             return new() { Product = addedProduct };
         }
 
         public UpdateProductPriceSuccessModel UpdateProductPrice(UpdateProductPriceRequestModel product)
         {
-            var updatedProduct = _productsRepository.GetProduct(product.ProductId);
+            Product updatedProduct = _productsRepository.GetProduct(product.ProductId)!;
             updatedProduct.Price = product.NewProductPrice;
             _productsRepository.UpdateProduct(updatedProduct);
             return new() { Product = updatedProduct };
@@ -59,17 +44,17 @@ namespace Infrastructure.Services
 
         public DeleteProductSuccessModel DeleteProduct(ActionWithExistingProductRequestModel product)
         {
-            var deletedProduct = _productsRepository.GetProduct(product.ProductId);
+            Product deletedProduct = _productsRepository.GetProduct(product.ProductId)!;
             _productsRepository.DeleteProduct(deletedProduct);
             return new() { Product = deletedProduct };
         }
         
         public RejectOrderSuccessModel RejectOrder(RejectOrderRequestModel orderRequest)
         {
-            var rejectedOrder = _ordersRepository.GetOrder(orderRequest.OrderId);
+            Order rejectedOrder = _ordersRepository.GetOrder(orderRequest.OrderId)!;
             if (rejectedOrder.Status == OrderStatus.Rejected) return new RejectOrderSuccessModel(){ Order = rejectedOrder, Success = false, Message = "This order is already rejected"};
             if (rejectedOrder.Status == OrderStatus.Sent) return new RejectOrderSuccessModel(){ Order = rejectedOrder, Success = false, Message = "This order is already sent, can't reject it"};
-            var orderedProduct = _productsRepository.GetProduct(rejectedOrder.ProductId);
+            Product orderedProduct = _productsRepository.GetProduct(rejectedOrder.ProductId)!;
             rejectedOrder.Status = OrderStatus.Rejected;
             orderedProduct.AvailableAmount += (int)rejectedOrder.Quantity;
             _ordersRepository.UpdateOrder(rejectedOrder);
@@ -84,9 +69,9 @@ namespace Infrastructure.Services
 
         public GetUserListResponseModel GetUserList(GetUserListRequestModel getUserListRequest)
         {
-            var users = _usersRepository.GetAllUsers();
+            List<User> users = _usersRepository.GetAllUsers();
             List<UserModel> userModels = new List<UserModel>();
-            foreach (var user in users)
+            foreach (User user in users)
             {
                 userModels.Add(user);
             }
@@ -98,12 +83,6 @@ namespace Infrastructure.Services
 
         public AddWorkerResponseModel AddWorker(AddWorkerRequestModel addWorkerRequest)
         {
-            if (_usersRepository.GetUserByLogin(addWorkerRequest.NewUserLogin) is not null)
-                return new AddWorkerResponseModel()
-                {
-                    Success = false,
-                    Message = "login is already in use"
-                };
             PasswordDecryptor decryptor = new PasswordDecryptor();
             string encryptedPassword = decryptor.PrimaryEncryptPassword(addWorkerRequest.NewUserLogin, addWorkerRequest.NewUserPassword);
             _usersRepository.CreateUser(new User()
@@ -115,7 +94,7 @@ namespace Infrastructure.Services
                 Phone = addWorkerRequest.Phone,
                 Role = addWorkerRequest.Role
             });
-            User createdUser = _usersRepository.GetUserByLogin(addWorkerRequest.NewUserLogin);
+            User createdUser = _usersRepository.GetUserByLogin(addWorkerRequest.NewUserLogin)!;
             createdUser.EncryptedPassword = decryptor.SecondaryEncryptPassword(createdUser, createdUser.EncryptedPassword);
             _usersRepository.UpdateUser(createdUser);
             return new AddWorkerResponseModel()
@@ -128,7 +107,7 @@ namespace Infrastructure.Services
         
         public RemoveUserResponseModel RemoveWorker(RemoveWorkerRequestModel removeWorkerRequest)
         {
-            var deletedUser = _usersRepository.GetUser(removeWorkerRequest.UserId);
+            User? deletedUser = _usersRepository.GetUser(removeWorkerRequest.UserId);
             if (deletedUser == null)
                 return new() { Success = false, Message = "such user is not found" };
             

@@ -12,10 +12,12 @@ namespace WebApi.Controllers
     public class CommonController : ControllerBase
     {
         private readonly IWarehouseUserService _warehouseUserService;
+        private readonly IValidationService _validationService;
 
-        public CommonController(IWarehouseUserService warehouseUserService)
+        public CommonController(IWarehouseUserService warehouseUserService, IValidationService validationService)
         {
             _warehouseUserService = warehouseUserService;
+            _validationService = validationService;
         }
 
         [HttpGet]
@@ -44,7 +46,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(getMyProfileRequest, AccessRights.Any);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(getMyProfileRequest, AccessRights.Any);
                 if (error is not null) return BadRequest(error);
                 GetMyProfileResponseModel response = _warehouseUserService.GetMyProfileDetails(getMyProfileRequest);
                 if (response == null)
@@ -66,8 +68,11 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.AdvancedCheckRequest(updateMyProfileRequest, AccessRights.Any);
+                (ErrorResponseModel? error, _) = _warehouseUserService.AdvancedCheckRequest(updateMyProfileRequest, AccessRights.Any);
                 if (error is not null) return BadRequest(error);
+                error = _validationService.ValidateUserModel(updateMyProfileRequest, true);
+                if (error != null)
+                    return BadRequest(error);
                 UpdateMyProfileResponseModel response = _warehouseUserService.UpdateMyProfile(updateMyProfileRequest);
                 if (response == null)
                     return StatusCode(500);
@@ -88,10 +93,10 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseUserService.AdvancedCheckRequest(removeMyAccRequest, AccessRights.Any);
-                if (error is not null) return BadRequest(error);
-
-                RemoveUserRequest request = new() { UserId = user.UserId!.Value };
+                (ErrorResponseModel? error, User? user) = _warehouseUserService.AdvancedCheckRequest(removeMyAccRequest, AccessRights.Any);
+                if (error is not null) 
+                    return BadRequest(error);
+                RemoveUserRequest request = new() { UserId = user!.UserId!.Value };
                 RemoveMyProfileResponseModel response = _warehouseUserService.DeleteMyProfile(request);
                 if (response == null)
                     return StatusCode(500);

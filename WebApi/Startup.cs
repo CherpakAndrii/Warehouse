@@ -60,6 +60,7 @@ namespace WebApi
                 }));
             
             services.AddTransient<IWarehouseAdminService, WarehouseAdminService>();
+            services.AddTransient<IValidationService, ValidationService>();
             services.AddTransient<IWarehouseManagerService, WarehouseManagerService>();
             services.AddTransient<IWarehouseCustomersService, WarehouseCustomersService>();
             services.AddTransient<IWarehouseAuthService, WarehouseAuthService>();

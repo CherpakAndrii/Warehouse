@@ -16,9 +16,7 @@ namespace Models.Api.Req_Res.Admin.Request
 
         [JsonPropertyName("productQuantity")]
         public uint ProductQuantity { get; set; }
-        [JsonPropertyName("availableAmount")]
-        public int AvailableAmount { get; set; }
-        
+
         [JsonPropertyName("category")]
         public ProductCategory ProductCategory { get; set; }
         
@@ -29,7 +27,7 @@ namespace Models.Api.Req_Res.Admin.Request
                 Name = ProductName,
                 Price = ProductPrice,
                 Quantity = ProductQuantity,
-                AvailableAmount = AvailableAmount,
+                AvailableAmount = (int)ProductQuantity,
                 Category = ProductCategory
             };
     }

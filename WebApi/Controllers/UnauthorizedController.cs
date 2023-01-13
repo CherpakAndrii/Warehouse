@@ -10,10 +10,12 @@ namespace WebApi.Controllers
     public class UnauthorizedController : ControllerBase
     {
         private IWarehouseAuthService _warehouseAuthService;
+        private IValidationService _validationService;
 
-        public UnauthorizedController(IWarehouseAuthService warehouseAuthService)
+        public UnauthorizedController(IWarehouseAuthService warehouseAuthService, IValidationService validationService)
         {
             _warehouseAuthService = warehouseAuthService;
+            _validationService = validationService;
         }
         
         [HttpGet]
@@ -42,6 +44,9 @@ namespace WebApi.Controllers
         {
             try
             {
+                ErrorResponseModel? error = _validationService.ValidateUserModel(createUserRequest);
+                if (error != null)
+                    return BadRequest(error);
                 SignInResponseModel response = _warehouseAuthService.TrySignIn(createUserRequest);
                 if (response == null)
                     return StatusCode(500);

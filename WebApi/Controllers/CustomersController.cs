@@ -27,12 +27,12 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseUserService.CheckRequest(getMyOrdersRequestModel, AccessRights.Customer);
+                (ErrorResponseModel? error, User? user) = _warehouseUserService.CheckRequest(getMyOrdersRequestModel, AccessRights.Customer);
                 if (error is not null) return BadRequest(error);
                 GetOrderListRequestModel getOrdersRequestModel = new()
                 {
                     SessionId = getMyOrdersRequestModel.SessionId,
-                    UserId = user.UserId
+                    UserId = user!.UserId
                 };
                 GetOrderListSuccessModel response = _warehouseUserService.GetOrderList(getOrdersRequestModel);
                 if (response == null)
@@ -54,14 +54,14 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseUserService.CheckRequest(createOrderRequest, AccessRights.Customer);
+                (ErrorResponseModel? error, User? user) = _warehouseUserService.CheckRequest(createOrderRequest, AccessRights.Customer);
                 if (error is not null) return BadRequest(error);
                 CreateOrderRequestModel request = new()
                 {
                     SessionId = createOrderRequest.SessionId, 
                     ProductId = createOrderRequest.ProductId,
                     Quantity = createOrderRequest.Quantity,
-                    UserId = user.UserId!.Value
+                    UserId = user!.UserId!.Value
                 };
                 CreateOrderResponseModel response = _warehouseCustomersService.MakeOrder(request);
                 if (response == null)
@@ -83,14 +83,14 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, User user) = _warehouseUserService.CheckRequest(removeOrderRequest, AccessRights.Customer);
+                (ErrorResponseModel? error, User? user) = _warehouseUserService.CheckRequest(removeOrderRequest, AccessRights.Customer);
                 if (error is not null) return BadRequest(error);
                 RemoveOrderRequestModel request = new()
                 {
                     SessionId = removeOrderRequest.SessionId,
                     Login = removeOrderRequest.Login,
                     OrderId = removeOrderRequest.OrderId,
-                    UserId = user.UserId!.Value
+                    UserId = user!.UserId!.Value
                 };
                 RemoveOrderResponseModel response = _warehouseCustomersService.RemoveOrder(request);
                 if (response == null)

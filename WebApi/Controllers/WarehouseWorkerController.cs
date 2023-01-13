@@ -23,7 +23,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                (ErrorResponseModel error, _) = _warehouseUserService.CheckRequest(getOrdersRequestModel, AccessRights.Worker);
+                (ErrorResponseModel? error, _) = _warehouseUserService.CheckRequest(getOrdersRequestModel, AccessRights.Worker);
                 if (error is not null) return BadRequest(error);
                 GetOrderListSuccessModel response = _warehouseUserService.GetOrderList(getOrdersRequestModel);
                 if (response == null)

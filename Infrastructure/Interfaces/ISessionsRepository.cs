@@ -1,6 +1,4 @@
-﻿using Models.DBModels;
-
-namespace Infrastructure.Interfaces
+﻿namespace Infrastructure.Interfaces
 {
     public interface ISessionsRepository
     {

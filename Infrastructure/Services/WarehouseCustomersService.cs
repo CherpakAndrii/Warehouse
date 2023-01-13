@@ -19,7 +19,7 @@ namespace Infrastructure.Services
 
         public CreateOrderResponseModel MakeOrder(CreateOrderRequestModel createRequest)
         {
-            Product orderedProduct = _productsRepository.GetProduct(createRequest.ProductId);
+            Product orderedProduct = _productsRepository.GetProduct(createRequest.ProductId)!;
             Order newOrder = new Order
             {
                 Status = OrderStatus.Created,
@@ -28,13 +28,13 @@ namespace Infrastructure.Services
                 OrderPrice = orderedProduct.Price * createRequest.Quantity,
                 UserId = createRequest.UserId
             };
-            var oldOrdersList = _ordersRepository.GetOrderList(createRequest.UserId, createRequest.ProductId).ToList();
+            List<Order> oldOrdersList = _ordersRepository.GetOrderList(createRequest.UserId, createRequest.ProductId).ToList();
             _ordersRepository.CreateOrder(newOrder);
             orderedProduct.AvailableAmount -= (int)createRequest.Quantity;
             _productsRepository.UpdateProduct(orderedProduct);
-            var newOrdersList = _ordersRepository.GetOrderList(createRequest.UserId, createRequest.ProductId).ToList();
+            List<Order> newOrdersList = _ordersRepository.GetOrderList(createRequest.UserId, createRequest.ProductId).ToList();
 
-            var addedOrder = newOrdersList.Except(oldOrdersList).FirstOrDefault();
+            Order addedOrder = newOrdersList.Except(oldOrdersList).FirstOrDefault()!;
             return new() 
             {
                 Order = addedOrder,
@@ -45,7 +45,7 @@ namespace Infrastructure.Services
 
         public RemoveOrderResponseModel RemoveOrder(RemoveOrderRequestModel removeOrderRequest)
         {
-            var deletedOrder = _ordersRepository.GetOrder(removeOrderRequest.OrderId);
+            Order deletedOrder = _ordersRepository.GetOrder(removeOrderRequest.OrderId);
             if (deletedOrder is null)
                 return new() { Success = false, Message = $"order {removeOrderRequest.OrderId} not found" };
             if (deletedOrder.UserId != removeOrderRequest.UserId)
@@ -54,7 +54,7 @@ namespace Infrastructure.Services
                 return new() { Success = false, Message = "can't remove already sent order", Order = deletedOrder };
             if (deletedOrder.Status == OrderStatus.Rejected)
                 return new() { Success = false, Message = "this order is already rejected", Order = deletedOrder };
-            Product orderedProduct = _productsRepository.GetProduct(deletedOrder.ProductId);
+            Product orderedProduct = _productsRepository.GetProduct(deletedOrder.ProductId)!;
             orderedProduct.AvailableAmount += (int)deletedOrder.Quantity;
             _ordersRepository.DeleteOrder(deletedOrder);
             _productsRepository.UpdateProduct(orderedProduct);
